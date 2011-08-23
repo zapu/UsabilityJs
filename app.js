@@ -4,6 +4,7 @@ var fs = require("fs");
 var path = require("path");
 
 var router = require("./router");
+var templates = require("./templates");
 
 
 router.addRoute("/favicon.ico", function(request, response, params) {
@@ -13,11 +14,13 @@ router.addRoute("/favicon.ico", function(request, response, params) {
 router.addRoute("/test/:id/:id2", testRoute);
 router.addRoute(/^\/static\/(.*)$/, staticRoute);
 
+
+templates.addDefaultTemplates();
+
 function testRoute(request, response, params)
 {
 	response.writeHead(200);
-	response.write("Hello id1: " + params["id"] + " id2: " + params["id2"]);
-	console.log(params);
+	response.write(templates.render("views/test.ejs", { test: ["params foreach:"], names: params }));
 	response.end();
 }
 
