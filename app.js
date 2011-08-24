@@ -17,6 +17,12 @@ router.addRoute(/^\/static\/(.*)$/, staticRoute);
 
 templates.addDefaultTemplates();
 
+function global404(request, response)
+{
+	response.writeHead(404);
+	response.end(templates.render("views/404.ejs", {}));
+}
+
 function testRoute(request, response, params)
 {
 	response.writeHead(200);
@@ -31,17 +37,13 @@ function staticRoute(request, response, params)
 	
 	console.log("Accessing " + filename + " in " + directory);
 	if(directory.indexOf("static") != 0) {
-		response.writeHead(404);
-		response.write("404");
-		response.end();
+		global404(request, response);
 		return;
 	}
 	
 	fs.readFile(filename, function(error, file) {
 		if(error) {
-			response.writeHead(404);
-			response.write("404");
-			response.end();
+			global404(request, response);
 		} else {
 			response.writeHead(200, {"Content-Type": "image/ico"});
 			response.write(file, file);
@@ -53,9 +55,7 @@ function staticRoute(request, response, params)
 function onRequest(request, response)
 {
 	if(!router.routeRequest(request, response)) {
-		response.writeHead(404);
-		response.write("404");
-		response.end();
+		global404(request, response);
 	}
 }
 
