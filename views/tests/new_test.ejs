@@ -1,0 +1,14 @@
+<html>
+<head>
+</head>
+<body>
+
+Scenario: <b><%= name %></b>
+
+<form method="POST" action="/tests/begin_new_test/">
+<input type="hidden" name="scenario_id" value="<%= id %>"/>
+<button name="submit">Begin test!</button>
+</form>
+
+</body>
+</html>

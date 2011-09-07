@@ -1,17 +1,57 @@
 var http = require("http");
+var url = require("url");
+var Cookies = require("./cookies");
 
-var server = http.createServer(function(request, response) {
-	//console.log("Request " + request.method + " " + request.url);
-	//console.log(request.headers);
+var testManager = require("./testmanager");
+
+function GlueBuffers(chunks)
+{
+	var bufferSize = 0;
+	chunks.forEach(function(chunk) {
+		bufferSize += chunk.length;
+	});
+	
+	var buffer = new Buffer(bufferSize);
+	var pos = 0;
+	chunks.forEach(function(chunk) {
+		chunk.copy(buffer, pos, 0);
+		pos += chunk.length;
+	});
+	
+	return buffer;
+}
+
+var proxyServer = http.createServer(function(request, response) {	
+	
+	var host = request.headers.host.split(':'); //the best solution is usually the easist one.
 	
 	var requestOptions = {
-		host: request.headers.host,
-		port: 80,
+		host: host[0],
+		port: host[1] || 80,
 		path: request.url,
 		method: request.method,
+		headers: request.headers, //TODO: Strip some headers?
 	};
+
+	var url_parts = url.parse(request.url, true);
+	var requestCookies = new Cookies(request, null);
+		
+	var new_test_token = url_parts.query["__ujs_token"];
+	var test_cookie = requestCookies.get("__ujs_cookie");
 	
-	console.log(requestOptions);
+	//TODO: Clean ujs cookie from request so proxy is 
+	//transparent (from target host point of view)?
+	
+	var test = null;
+	
+	if(new_test_token != null) {
+		//Query token is "more important", because when tester starts next
+		//test on same website, the cookie stays.
+		
+		test = testManager.getTestByUUID(new_test_token);
+	} else if(test_cookie != null) {
+		test = testManager.getTestByUUID(test_cookie);
+	}
 	
 	proxyRequest = http.request(requestOptions, function(proxyResponse) {		
 		var chunks = []
@@ -26,17 +66,17 @@ var server = http.createServer(function(request, response) {
 		});
 		
 		proxyResponse.addListener('end', function(e) {
-			var bufferSize = 0;
-			chunks.forEach(function(chunk) {
-				bufferSize += chunk.length;
-			});
-			
-			var buffer = new Buffer(bufferSize);
-			var pos = 0;
-			chunks.forEach(function(chunk) {
-				chunk.copy(buffer, pos, 0);
-				pos += chunk.length;
-			});
+			buffer = GlueBuffers(chunks);
+						
+			//Manage cookies
+			var responseCookies = new Cookies(null, proxyResponse);
+			if(test != null) {
+				responseCookies.set("__ujs_cookie", test.uuid);
+				
+			} else if(test_cookie != null) {
+				//Remove cookie if there is no such test.
+				responseCookies.set("__ujs_cookie", "", {"expires": 0});
+			}
 			
 			response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
 			response.write(buffer);
@@ -45,8 +85,10 @@ var server = http.createServer(function(request, response) {
 	});
 	
 	proxyRequest.addListener('error', function(e) {
-		console.log("Request error:");
-		console.log(e);
+		response.writeHead(500);
+		response.write("Target server error");
+		response.write(e.toString());
+		response.end();
 	});
 	
 	request.addListener('data', function(chunk) {
@@ -58,4 +100,4 @@ var server = http.createServer(function(request, response) {
 	});
 });
 
-server.listen(8081);
+proxyServer.listen(8081);

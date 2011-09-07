@@ -6,7 +6,17 @@ var path = require("path");
 var router = require("./router");
 var templates = require("./templates");
 
+//Requiring mysqlcli will also set up the connection
+var mysqlcli = require("./mysqlcli");
 
+//Proxy engine, module starts listening on its own
+var proxy = require("./proxy");
+
+//Require controllers which install routes by themselves
+require("./controllers/scenarios");
+require("./controllers/tests");
+
+//Add default routes
 router.addRoute("/favicon.ico", function(request, response, params) {
 	return staticRoute(request, response, { 1: "favicon.ico"});
 });
@@ -14,7 +24,7 @@ router.addRoute("/favicon.ico", function(request, response, params) {
 router.addRoute("/test/:id/:id2", testRoute);
 router.addRoute(/^\/static\/(.*)$/, staticRoute);
 
-
+//Parse templates (views)
 templates.addDefaultTemplates();
 
 function global404(request, response)

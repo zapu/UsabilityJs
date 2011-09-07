@@ -1,0 +1,6 @@
+<h1>Scenarios</h1>
+<ul>
+	<% scenarios.forEach(function(scenario){ %>
+		<li><a href="./scenarios/show/<%= scenario["id"] %>"><%= scenario["name"] %></a></li>
+	<% }); %>
+</ul>

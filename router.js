@@ -38,7 +38,15 @@ Router.prototype.tryRoute = function(pathname, request, response, route)
 			var key = route.keys[j];
 			params[key.name] = match[j+1];
 		}
-		route.func(request, response, params);
+		
+		try {
+			route.func(request, response, params);
+		} catch (err) {
+			response.writeHead(200);
+			response.write("Exception: " + err.toString());
+			response.write(err.stack);
+			response.end();
+		}
 		
 		return true;
 	}
