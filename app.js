@@ -9,20 +9,25 @@ var templates = require("./templates");
 //Requiring mysqlcli will also set up the connection
 var mysqlcli = require("./mysqlcli");
 
-//Proxy engine, module starts listening on its own
+//Proxy engine, module starts server on its own
 var proxy = require("./proxy");
 
 //Require controllers which install routes by themselves
 require("./controllers/scenarios");
 require("./controllers/tests");
 
+//Mime types
+var mimes = require("./mimes");
+
 //Add default routes
 router.addRoute("/favicon.ico", function(request, response, params) {
 	return staticRoute(request, response, { 1: "favicon.ico"});
 });
 
-router.addRoute("/test/:id/:id2", testRoute);
-router.addRoute(/^\/static\/(.*)$/, staticRoute);
+router.addRoute("/", function(request, response, params) {
+	response.writeHead(200);
+	response.end(templates.render("views/index.ejs", {}));
+});
 
 //Parse templates (views)
 templates.addDefaultTemplates();
@@ -33,19 +38,11 @@ function global404(request, response)
 	response.end(templates.render("views/404.ejs", {}));
 }
 
-function testRoute(request, response, params)
-{
-	response.writeHead(200);
-	response.write(templates.render("views/test.ejs", { test: ["params foreach:"], names: params }));
-	response.end();
-}
-
 function staticRoute(request, response, params)
 {
 	var filename = "static/" + params[1];
 	var directory = path.dirname(path.normalize(filename));
-	
-	console.log("Accessing " + filename + " in " + directory);
+
 	if(directory.indexOf("static") != 0) {
 		global404(request, response);
 		return;
@@ -55,7 +52,10 @@ function staticRoute(request, response, params)
 		if(error) {
 			global404(request, response);
 		} else {
-			response.writeHead(200, {"Content-Type": "image/ico"});
+			var extension = path.extname(filename);
+			var mime = mimes.ext.getContentType(extension);
+			
+			response.writeHead(200, {"Content-Type": mime});
 			response.write(file, file);
 			response.end();
 		}

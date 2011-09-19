@@ -29,7 +29,7 @@ function showScenario(request, response, params)
 			response.write("<b>scenario not found.</b>");
 			response.end();
 		} else {
-			var viewParams = {name: scenario["name"]};
+			var viewParams = {name: scenario["name"], id: scenario["id"]};
 			var text = templates.render("views/scenarios/show.ejs", viewParams);
 			
 			response.end(text);

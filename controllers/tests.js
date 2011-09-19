@@ -6,6 +6,8 @@ var testManager = require("../testmanager");
 var router = require("../router");
 router.addRoute("/tests/begintest/:id", beginTest);
 router.addRoute("/tests/begin_new_test", beginNewTestPost);
+router.addRoute("/tests/show_test/:uuid", showTest);
+router.addRoute("/tests", listTests);
 
 var templates = require("../templates");
 
@@ -51,3 +53,34 @@ function beginNewTestPost(request, response, params)
 		});
 	});
 }
+
+function listTests(request, response, params)
+{
+	var activeTests = []
+	for (uid in testManager.testMap) {
+		var test = testManager.testMap[uid];
+		activeTests.push(test);
+	}
+	
+	response.writeHead(200);
+	response.end(templates.render("views/tests/testlist.ejs", {activeTests: activeTests}));
+}
+
+function showTest(request, response, params)
+{
+	response.writeHead(200);
+	
+	var testId = params["uuid"];
+	var test = testManager.testMap[testId];
+	if(test == null) {
+		response.write("no such test");
+		response.end();
+		return;
+	}
+	
+	var params = {test: test};
+	
+	var text = templates.render("views/tests/show_test.ejs", params);
+	response.end(text);
+}
+

@@ -1,0 +1,13 @@
+<html>
+<head>
+<title>Test</title>
+</head>
+<body>
+	A test for scenario: <b><%= test.scenario.name %></b><br/>
+	<ul>
+		<% test.pages.forEach(function(page) { %>
+			<li><%= page.address %></li>
+		<% }); %>
+	</ul>
+</body>
+</html>

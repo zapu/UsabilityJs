@@ -1,0 +1,15 @@
+<html>
+<head>
+</head>
+<body>
+
+<h1>Active tests:</h1>
+
+<ul>
+<% activeTests.forEach(function(test) { %>
+	<li><b><a href="/tests/show_test/<%= test.uuid %>"><%= test.uuid %></a></b> <%= test.scenario.name %> <i><%= test.scenario.address %></i></li>
+<% }); %>
+</ul>
+
+</body>
+</html>

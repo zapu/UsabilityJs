@@ -16,7 +16,6 @@ module.exports = new TestManager();
 
 function TestManager()
 {
-	this.tests = [];
 	this.testMap = {};
 }
 
@@ -74,7 +73,23 @@ TestReport.prototype.getStartingLocation = function()
 	return this.scenario["address"] + "?__ujs_token=" + this.uuid;
 }
 
+TestReport.prototype.endTest = function()
+{
+	//Insert to mysql here
+}
+
+TestReport.prototype.pageVisited = function(addr)
+{
+	var page = new TestPage(this.pages.length);
+	this.pages.push(page);
+	
+	page.address = addr;
+	
+	return page;
+}
+
 function TestPage(id)
 {
+	this.address = "";
 	this.actions = [];
 }

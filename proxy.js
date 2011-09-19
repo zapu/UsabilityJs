@@ -24,16 +24,17 @@ function GlueBuffers(chunks)
 var proxyServer = http.createServer(function(request, response) {	
 	
 	var host = request.headers.host.split(':'); //the best solution is usually the easist one.
-	
+
+	var url_parts = url.parse(request.url, true);
+		
 	var requestOptions = {
 		host: host[0],
 		port: host[1] || 80,
-		path: request.url,
+		path: url_parts.pathname + url_parts.search,
 		method: request.method,
 		headers: request.headers, //TODO: Strip some headers?
 	};
 
-	var url_parts = url.parse(request.url, true);
 	var requestCookies = new Cookies(request, null);
 		
 	var new_test_token = url_parts.query["__ujs_token"];
@@ -66,13 +67,15 @@ var proxyServer = http.createServer(function(request, response) {
 		});
 		
 		proxyResponse.addListener('end', function(e) {
-			buffer = GlueBuffers(chunks);
+			var buffer = GlueBuffers(chunks);
 						
 			//Manage cookies
 			var responseCookies = new Cookies(null, proxyResponse);
 			if(test != null) {
+				//Generate and inject page token
 				responseCookies.set("__ujs_cookie", test.uuid);
-				
+			
+				test.pageVisited(request.url);
 			} else if(test_cookie != null) {
 				//Remove cookie if there is no such test.
 				responseCookies.set("__ujs_cookie", "", {"expires": 0});
