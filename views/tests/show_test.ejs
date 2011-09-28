@@ -3,8 +3,28 @@
 <title>Test</title>
 </head>
 <body>
+	<script src="/static/socketio/socket.io.js"></script>
+	<script src="/static/jquery-1.6.4.js"></script>
+	<script>
+		var test_id = "<%= test.uuid %>";
+	
+		var socket = io.connect('http://192.168.248.128:8080');
+		socket.on('connect', function(){
+			socket.emit('test_subscribe', {uuid: test_id});
+		});
+		
+		socket.on('new_test_page', function(msg){
+			$("#testlist").append("<li>" + msg.page.address + "</li>");
+		});
+		
+		socket.on('error', function(msg) {
+			alert(msg.msg);
+		});
+	</script>
+	
+	
 	A test for scenario: <b><%= test.scenario.name %></b><br/>
-	<ul>
+	<ul id="testlist">
 		<% test.pages.forEach(function(page) { %>
 			<li><%= page.address %></li>
 		<% }); %>

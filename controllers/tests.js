@@ -1,6 +1,6 @@
 var formidable = require("formidable");
 
-var testManager = require("../testmanager");
+var testManager = require("../testing/manager");
 
 //Install routes
 var router = require("../router");

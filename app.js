@@ -12,6 +12,8 @@ var mysqlcli = require("./mysqlcli");
 //Proxy engine, module starts server on its own
 var proxy = require("./proxy");
 
+var testManager = require("./testing/manager");
+
 //Require controllers which install routes by themselves
 require("./controllers/scenarios");
 require("./controllers/tests");
@@ -29,6 +31,8 @@ router.addRoute("/", function(request, response, params) {
 	response.end(templates.render("views/index.ejs", {}));
 });
 
+router.addRoute(/static\/(.*)/, staticRoute);
+
 //Parse templates (views)
 templates.addDefaultTemplates();
 
@@ -42,7 +46,7 @@ function staticRoute(request, response, params)
 {
 	var filename = "static/" + params[1];
 	var directory = path.dirname(path.normalize(filename));
-
+	
 	if(directory.indexOf("static") != 0) {
 		global404(request, response);
 		return;
@@ -64,6 +68,8 @@ function staticRoute(request, response, params)
 
 function onRequest(request, response)
 {
+	console.log("request2: " + request.method)
+
 	if(!router.routeRequest(request, response)) {
 		global404(request, response);
 	}
@@ -71,3 +77,11 @@ function onRequest(request, response)
 
 var server = http.createServer(onRequest);
 server.listen(8080);
+
+var socketio = require("socket.io").listen(server);
+
+socketio.sockets.on("connection", function(socket) {
+	testManager.bindToSocketIO(socket);
+});
+
+socketio.set('log level', 1);
