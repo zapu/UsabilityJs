@@ -45,6 +45,9 @@ TestReport.prototype.findReferedPage = function(referer)
 
 TestReport.prototype.proxyHit = function(contentType, requestOptions, data)
 {
+	console.log("ProxyHit: " + this.uuid + " " + sys.inspect(contentType) + " " + 
+		requestOptions.host + " " + requestOptions.path + " " + requestOptions.headers.referer);
+
 	if(contentType.type == "text/html") {
 		var page = new TestPage(this.pages.length);
 		this.pages.push(page);
@@ -53,11 +56,15 @@ TestReport.prototype.proxyHit = function(contentType, requestOptions, data)
 		page.referer = requestOptions.headers.referer;
 	} else {
 		var referPage = this.findReferedPage(requestOptions.headers.referer);
-		console.log("Refer: " + sys.inspect(referPage));
-	}
+		if(referPage) {
+			var resource = new TestPageResource();
+			referPage.addTestResource(resource);
 
-	console.log("ProxyHit: " + this.uuid + " " + sys.inspect(contentType) + " " + 
-		requestOptions.host + " " + requestOptions.path + " " + requestOptions.headers.referer);
+			resource.address = requestOptions.path;
+		} else {
+			//what do?	
+		}
+	}
 }
 
 TestReport.prototype.pageVisited = function(request, response, buffer)
@@ -77,10 +84,11 @@ TestReport.prototype.pageVisited = function(request, response, buffer)
 TestReport.prototype.bindToSocketIO = function(socket)
 {
 	this.listeners.push(socket);
-	
+
+	var that = this;	
 	socket.on('disconnect', function(){
-		var index = this.listeners.indexOf(socket);
-		delete this.listeners[index];
+		var index = that.listeners.indexOf(socket);
+		delete that.listeners[index];
 	});
 }
 
@@ -97,10 +105,12 @@ TestPage.prototype.addTestResource = function(resource)
 {
 	resource.id = this.resources.length;
 	this.resources.push(resource);
+
+	resource.parent = this;
 }
 
 //Class for resources in test pages, be it json (fetched with ajax), images, css etc.
-function TestResource()
+function TestPageResource()
 {
 
 }

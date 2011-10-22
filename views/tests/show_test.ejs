@@ -26,7 +26,19 @@
 	A test for scenario: <b><%= test.scenario.name %></b><br/>
 	<ul id="testlist">
 		<% test.pages.forEach(function(page) { %>
-			<li><%= page.address %></li>
+			<li>
+				<div>
+					<%= page.address %>
+					<% if(page.resources.length != 0) { %>
+						Resources:<br/>
+						<% page.resources.forEach(function(resource) { %>
+							<ul>
+								<%= resource.address %>
+							</ul>
+						<% }); %>
+					<% } %>
+				</div>
+			</li>
 		<% }); %>
 	</ul>
 </body>
