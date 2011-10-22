@@ -28,7 +28,7 @@ router.addRoute("/favicon.ico", function(request, response, params) {
 
 router.addRoute("/", function(request, response, params) {
 	response.writeHead(200);
-	response.end(templates.render("views/index.ejs", {}));
+	response.end(templates.render("views/index.ejs", {PageTitle: "Title"}));
 });
 
 router.addRoute(/static\/(.*)/, staticRoute);
@@ -68,8 +68,6 @@ function staticRoute(request, response, params)
 
 function onRequest(request, response)
 {
-	console.log("request2: " + request.method)
-
 	if(!router.routeRequest(request, response)) {
 		global404(request, response);
 	}

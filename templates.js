@@ -11,6 +11,13 @@ function Templates()
 
 Templates.prototype.render = function(templateName, locals)
 {
+	if(locals.render == undefined) {
+		var savedLocals = locals;
+		var that = this;
+		locals.render = function(templateName_) {
+			return that.render(templateName_, savedLocals);
+		}
+	}
 	return this.templates[templateName](locals);
 }
 
@@ -26,8 +33,6 @@ Templates.prototype.addTemplatesFromDir = function(dir)
 	var len = files.length;
 	var currentFile;
 	var stats;
-	
-	console.log("parsing dir " + currentDir);
 	
 	for(var i = 0; i < len; ++i) {
 		currentFile = currentDir + files[i];

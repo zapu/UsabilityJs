@@ -1,6 +1,9 @@
 var http = require("http");
 var url = require("url");
 var Cookies = require("./cookies");
+var util = require("util");
+
+var gzbz2 = require("gzbz2");
 
 var testManager = require("./testing/manager");
 
@@ -21,15 +24,21 @@ function GlueBuffers(chunks)
 	return buffer;
 }
 
-function getContentType(headers)
+function getHeader(headers, name)
 {
-	var contentType = null;
+	var header = null;
 	for(var key in headers) {
 		if(key.toLowerCase() == "content-type") {
-			contentType = headers[key];
-			break;
+			return headers[key];
 		}
-	}
+	}	
+
+	return null;
+}
+
+function getContentType(headers)
+{
+	var contentType = getHeader(headers, "content-type");
 
 	if(contentType == null)
 		return null;
@@ -53,13 +62,15 @@ function injectCookies(test, test_cookie, response)
 		responseCookies.set("__ujs_cookie", test.uuid);
 	} else if(test_cookie != null) {
 		//Remove cookie if there is no such test.
-		responseCookies.set("__ujs_cookie", "", {"expires": 0});
+
+		//But check if such cookie existed first...
+		//responseCookies.set("__ujs_cookie", "", {"expires": 0});
 	}
 }
 
 function handleProxyRequest(request, response)
 {
-	var host_parts = request.headers.host.split(";");
+	var host_parts = request.headers.host.split(":");
 	var host = host_parts[0];
 	var port = host_parts[1] || 80;
 
@@ -75,8 +86,8 @@ function handleProxyRequest(request, response)
 
 	var request_cookies = new Cookies(request, null);
 
-	var new_test_token = url_parts.query["__usj_token"]; //Token in url when redirected for new test
-	var test_cookie = request_cookies.get("__usj_cookie"); //Cookie for ongoing test
+	var new_test_token = url_parts.query["__ujs_token"]; //Token in url when redirected for new test
+	var test_cookie = request_cookies.get("__ujs_cookie"); //Cookie for ongoing test
 
 	//TODO: Clean ujs cookie from request so proxy is 
 	//transparent (from target host point of view)?
@@ -85,7 +96,7 @@ function handleProxyRequest(request, response)
 	
 	if(new_test_token != null) {
 		//Query token is "more important", because when tester starts next
-		//test on same website, the cookie stays.
+		//test on same website, we have to replace old cookie by planting a new one
 		
 		test = testManager.getTestByUUID(new_test_token);
 	} else if(test_cookie != null) {
@@ -103,70 +114,42 @@ function handleProxyRequest(request, response)
 
 		proxyResponse.on('error', function(e) {
 			console.log("proxy error " + e);
+			response.end("Proxy error " + util.inspect(e));
 			return;
 		});
 
-		if(text) {
-			proxyResponse.setEncoding('utf8');
-			//Handle response as string
-			var data = "";
-			
-			proxyResponse.on('data', function(chunk){
-				data += chunk;		
-			});
+		//Handle Buffers which will need to be glued
+		var chunks = [];	
 
-			proxyResponse.on('end', function(){
-				injectCookies(test, test_cookie, proxyResponse);
+		proxyResponse.on("data", function(chunk){
+			chunks.push(chunk);
+		});
 
-				//Set content type to utf8 because thats what we are using
-				console.log(content_type);
+		proxyResponse.on("end", function(){
+			var buffer = GlueBuffers(chunks);
 
-				if(content_type.params["charset"] != "utf-8") {
-					content_type.params["charset"] = "utf-8";
-					proxyResponse.headers["Content-Type"] = content_type.type;
-					for(var param in content_type.params) {
-						proxyResponse.headers["Content-Type"] += ";" + param + "=" + content_type.params[param];
-					}
-					console.log(content_type);
-					console.log("new content type " + proxyResponse.headers["Content-Type"]);
-				}
+			var decodedBuffer;
+			if(getHeader(proxyResponse.headers, "content-encoding") == "gzip") {
+				var gzip = new gzbz2.Gunzip;
+				gzip.init({encoding: "utf8"});
+				decodedBuffer = gzip.inflate(buffer, "utf8");
+				gzip.end();
+			} else {
+				decodedBuffer = buffer.toString("utf8")
+			}
 
-				if(test) {
-					test.proxyHit(content_type, data);
-				}
+			injectCookies(test, test_cookie, proxyResponse);
 
-				console.log(data);
+			if(test) {
+				test.proxyHit(content_type, requestOptions, buffer);
+			}
 
-				response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
-				if(proxyResponse.statusCode != 304) { //not modified
-					response.write(data, 'utf8');
-				}
-				response.end();
-			});
-		} else {
-			//Handle Buffers which will need to be glued
-			var chunks = [];	
-
-			proxyResponse.on("data", function(chunk){
-				chunks.push(chunk);
-			});
-
-			proxyResponse.on("end", function(){
-				var buffer = GlueBuffers(chunks);
-
-				injectCookies(test, test_cookie, proxyResponse);
-				
-				if(test) {
-					test.proxyHit(content_type, buffer);
-				}
-
-				response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
-				if(proxyResponse.statusCode != 304) { //not modified
-					response.write(buffer);
-				}
-				response.end();
-			});
-		}
+			response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+			if(proxyResponse.statusCode != 304) { //if not "not modified" status
+				response.write(buffer);
+			}
+			response.end();
+		});
 	});
 
 	proxyRequest.on('error', function(e) {
