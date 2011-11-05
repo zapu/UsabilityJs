@@ -14,8 +14,18 @@ Templates.prototype.render = function(templateName, locals)
 	if(locals.render == undefined) {
 		var savedLocals = locals;
 		var that = this;
-		locals.render = function(templateName_) {
-			return that.render(templateName_, savedLocals);
+		locals.render = function(templateName_, locals_) {
+			var rlocals = savedLocals;
+			if(locals_ != undefined) {
+				rlocals = {}
+				for(key in savedLocals) {
+					rlocals[key] = savedLocals[key];
+				}
+				for(key in locals_) {
+					rlocals[key] = locals_[key];
+				}
+			}
+			return that.render(templateName_, rlocals);
 		}
 	}
 	return this.templates[templateName](locals);

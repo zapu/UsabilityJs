@@ -1,6 +1,126 @@
-#navlist li
+body
+{
+	font-family: Arial, Helvetica;
+	font-size: 80%;
+}
+
+
+.bodydiv
+{
+	width: 950px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.logo
+{
+	width: 1000px;
+	margin: 0 auto;
+
+	font-size: 200%;
+	font-weight: bold;
+}
+
+.logo hr
+{
+	line-height: 1;
+}
+
+.navcontainer
+{
+	display: block;
+    float: left;
+    padding: 0;
+
+    height: 30px;
+    line-height: 30px;
+
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.navcontainer ul
+{
+	list-style: none;
+	color: red;
+	margin: 0;
+	float: left;
+	padding: 0;
+}
+
+.navcontainer li
 {
 	display: inline;
-	list-style-type: none;
-	padding-right: 20px;
+	background: none;
+    margin: 0;
+    float: left;
+}
+
+.navcontainer li a
+{
+	background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    font-family: myriad-pro-condensed-1, myriad-pro-condensed-2, 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif; 
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    border: 1px solid #b3b3b3;
+    border-left: none;
+    border-right: 1px dotted #aaa;
+    padding: 6px 16px;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.navcontainer li.first a
+{
+	border-left: 1px solid #b3b3b3;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+}
+
+.navcontainer li.last a
+{
+	border-right: 1px solid #b3b3b3;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+}
+
+.actual-content
+{
+	clear: both;
+}
+
+.content-div
+{
+	border: 1px solid #CCC;
+	width: 100%;
+	padding: 10px;
+	margin: 10px;
+
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+.content-div hr
+{
+	border: 1px gray #CCC;
+	border-style: none none dotted;
 }

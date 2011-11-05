@@ -1,11 +1,10 @@
-<html>
-<head>
-<title>Test</title>
-</head>
-<body>
+<%-render("views/header.ejs", {PageTitle: "View test report"})%>
+<%-render("views/nav.ejs")%>
+
 	<script src="/static/socketio/socket.io.js"></script>
 	<script src="/static/jquery-1.6.4.js"></script>
 	<script>
+	/*
 		var test_id = "<%= test.uuid %>";
 	
 		var socket = io.connect('http://192.168.248.128:8080');
@@ -20,26 +19,36 @@
 		socket.on('error', function(msg) {
 			alert(msg.msg);
 		});
+		*/
 	</script>
 	
+	<div class="content-div">
 	
 	A test for scenario: <b><%= test.scenario.name %></b><br/>
 	<ul id="testlist">
 		<% test.pages.forEach(function(page) { %>
 			<li>
 				<div>
-					<%= page.address %>
+					Address: <%= page.address %><br/>
+					Referer: <%= page.referer %><br/>
+					@: <%= page.date.toString() %><br/>
 					<% if(page.resources.length != 0) { %>
 						Resources:<br/>
+						<ul>
 						<% page.resources.forEach(function(resource) { %>
-							<ul>
-								<%= resource.address %>
-							</ul>
+							<li>
+								Address: <%= resource.address %><br/>
+								Content-Type: <%= resource.contentType %><br/>
+								@: <%= +resource.date %>
+							</li>
 						<% }); %>
+						</ul>
 					<% } %>
 				</div>
 			</li>
 		<% }); %>
 	</ul>
-</body>
-</html>
+
+	</div>
+	
+<%-render("views/footer.ejs")%>

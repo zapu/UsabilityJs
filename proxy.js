@@ -28,7 +28,7 @@ function getHeader(headers, name)
 {
 	var header = null;
 	for(var key in headers) {
-		if(key.toLowerCase() == "content-type") {
+		if(key.toLowerCase() == name) {
 			return headers[key];
 		}
 	}	
@@ -41,7 +41,7 @@ function getContentType(headers)
 	var contentType = getHeader(headers, "content-type");
 
 	if(contentType == null)
-		return null;
+		return {type: "", params: {}};
 
 	var content_type_params = contentType.split(";");
 

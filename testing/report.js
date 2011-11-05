@@ -54,14 +54,18 @@ TestReport.prototype.proxyHit = function(contentType, requestOptions, data)
 
 		page.address = requestOptions.path;
 		page.referer = requestOptions.headers.referer;
+		page.date = new Date();
 	} else {
 		var referPage = this.findReferedPage(requestOptions.headers.referer);
 		if(referPage) {
 			var resource = new TestPageResource();
 			referPage.addTestResource(resource);
 
+			resource.contentType = contentType.type;
 			resource.address = requestOptions.path;
+			resource.date = new Date();
 		} else {
+			console.log("No proxy refer page for resource " + requestOptions.headers.referer);
 			//what do?	
 		}
 	}
