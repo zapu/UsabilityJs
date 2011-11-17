@@ -3,17 +3,9 @@ var TestPage = require("./report").TestPage;
 
 var mathuuid = require("../mathuuid");
 
-module.exports = new TestManager();
-
-
 function TestManager()
 {
 	this.testMap = {};
-}
-
-TestManager.prototype.startTestRedirect = function(request, response, url_parts)
-{
-	
 }
 
 TestManager.prototype.beginNewTest = function(scenario)
@@ -45,7 +37,7 @@ TestManager.prototype._createTestReport = function(scenario)
 	return test;
 }
 
-TestManager.prototype.getTestByUUID = function(uuid)
+TestManager.prototype.getReportByUUID = function(uuid)
 {
 	return this.testMap[uuid];
 }
@@ -63,4 +55,8 @@ TestManager.prototype.bindToSocketIO = function(socket)
 		
 		test.bindToSocketIO(socket);
 	});
+}
+
+module.exports = {
+	TestManager: TestManager,
 }

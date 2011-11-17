@@ -2,12 +2,15 @@ var util = require("util");
 
 function PageAction()
 {
-	this.pageId = 0;
+	this.pageId = -1;
+	this.requestId = -1;
 }
 
 function PageLoadedAction()
 {
 	PageLoadedAction.super_.call(this);	
+
+	
 }
 
 util.inherits(PageLoadedAction, PageAction);

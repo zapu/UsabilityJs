@@ -9,10 +9,10 @@ var templates = require("./templates");
 //Requiring mysqlcli will also set up the connection
 var mysqlcli = require("./mysqlcli");
 
-//Proxy engine, module starts server on its own
-var proxy = require("./proxy");
+var proxyModule = require("./proxy");
+var testManagerModule = require("./testing/manager");
 
-var testManager = require("./testing/manager");
+var testManager = new testManagerModule.TestManager();
 
 //Require controllers which install routes by themselves
 require("./controllers/scenarios");
@@ -75,6 +75,9 @@ function onRequest(request, response)
 
 var server = http.createServer(onRequest);
 server.listen(8080);
+
+var proxy = new proxyModule.Proxy(testManager);
+proxy.startServer(8081);
 
 var socketio = require("socket.io").listen(server);
 

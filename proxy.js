@@ -7,6 +7,11 @@ var gzbz2 = require("gzbz2");
 
 var testManager = require("./testing/manager");
 
+function Proxy(manager)
+{
+	this.testManager = manager;
+}
+
 function GlueBuffers(chunks)
 {
 	var bufferSize = 0;
@@ -68,7 +73,7 @@ function injectCookies(test, test_cookie, response)
 	}
 }
 
-function handleProxyRequest(request, response)
+Proxy.prototype.handleProxyRequest = function(request, response)
 {
 	var host_parts = request.headers.host.split(":");
 	var host = host_parts[0];
@@ -92,17 +97,37 @@ function handleProxyRequest(request, response)
 	//TODO: Clean ujs cookie from request so proxy is 
 	//transparent (from target host point of view)?
 	
-	var test = null;
+	var testReport = null;
 	
 	if(new_test_token != null) {
 		//Query token is "more important", because when tester starts next
-		//test on same website, we have to replace old cookie by planting a new one
+		//test on same website, we have to replace old cookie by new one
 		
-		test = testManager.getTestByUUID(new_test_token);
+		testReport = this.testManager.getReportByUUID(new_test_token);
 	} else if(test_cookie != null) {
-		test = testManager.getTestByUUID(test_cookie);
+		testReport = this.testManager.getReportByUUID(test_cookie);
 	}
 
+	if(testReport) {
+		if(testReport.onProxyRequest(requestOptions)) {
+			//TestReport will handle this request entirely
+			//Nothing will be sent to target server
+			var chunks = [];
+
+			request.addListener('data', function(chunk) {
+				chunks.push(chunk);
+			});
+
+			request.addListener('end', function() {
+				testReport.onProxyRequestCompleted(request, requestOptions, response);
+			});
+
+			return;
+		}
+	}
+
+	//No testReport to handle request or it doesn't want to:
+	//Proxyfing request to target server
 	proxyRequest = http.request(requestOptions, function(proxyResponse) {
 		var content_type = getContentType(proxyResponse.headers);
 		var text = false;
@@ -138,10 +163,19 @@ function handleProxyRequest(request, response)
 				decodedBuffer = buffer.toString("utf8")
 			}
 
-			injectCookies(test, test_cookie, proxyResponse);
+			injectCookies(testReport, test_cookie, proxyResponse);
 
-			if(test) {
-				test.proxyHit(content_type, requestOptions, buffer);
+			if(testReport) {
+				var params = {
+					ContentType: content_type, 
+					RequestOptions: requestOptions,
+					Buffer: buffer,
+					OutBuffer: null,
+				}
+				testReport.proxyHit(params);
+				if(params.OutBuffer != null) {
+					buffer = params.OutBuffer;
+				}
 			}
 
 			response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
@@ -168,7 +202,15 @@ function handleProxyRequest(request, response)
 	});
 }
 
-var proxyServer = http.createServer(handleProxyRequest);
+Proxy.prototype.startServer = function(port) 
+{
+	var that = this;
+	var proxyServer = http.createServer(function(a,b) {
+		that.handleProxyRequest(a,b);
+	});
+	proxyServer.listen(port);
+}
 
-
-proxyServer.listen(8081);
+module.exports = {
+	Proxy: Proxy,
+}
