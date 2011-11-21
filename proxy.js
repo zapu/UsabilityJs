@@ -119,7 +119,8 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 			});
 
 			request.addListener('end', function() {
-				testReport.onProxyRequestCompleted(request, requestOptions, response);
+				var buffer = GlueBuffers(chunks);
+				testReport.onProxyRequestCompleted(request, requestOptions, buffer, response);
 			});
 
 			return;
@@ -172,7 +173,8 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 					Buffer: buffer,
 					OutBuffer: null,
 				}
-				testReport.proxyHit(params);
+
+				testReport.proxyResponse(params);
 				if(params.OutBuffer != null) {
 					buffer = params.OutBuffer;
 				}

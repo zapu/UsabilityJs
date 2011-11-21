@@ -14,9 +14,9 @@ var testManagerModule = require("./testing/manager");
 
 var testManager = new testManagerModule.TestManager();
 
-//Require controllers which install routes by themselves
-require("./controllers/scenarios");
-require("./controllers/tests");
+//Require controllers and install them (sets up routes etc.)
+require("./controllers/scenarios").install(testManager);
+require("./controllers/tests").install(testManager);
 
 //Mime types
 var mimes = require("./mimes");

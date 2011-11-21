@@ -1,17 +1,10 @@
 var formidable = require("formidable");
 
-var testManager = require("../testing/manager");
-
-//Install routes
 var router = require("../router");
-router.addRoute("/tests/begintest/:id", beginTest);
-router.addRoute("/tests/begin_new_test", beginNewTestPost);
-router.addRoute("/tests/show_test/:uuid", showTest);
-router.addRoute("/tests", listTests);
-
 var templates = require("../templates");
-
 var scenariosModel = require("../models/scenarios");
+
+var testManager = null;
 
 function beginTest(request, response, params)
 {
@@ -84,3 +77,12 @@ function showTest(request, response, params)
 	response.end(text);
 }
 
+module.exports.install = function(_testManager)
+{
+	testManager = _testManager;
+
+	router.addRoute("/tests/begintest/:id", beginTest);
+	router.addRoute("/tests/begin_new_test", beginNewTestPost);
+	router.addRoute("/tests/show_test/:uuid", showTest);
+	router.addRoute("/tests", listTests);
+}

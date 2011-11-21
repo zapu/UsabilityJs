@@ -37,17 +37,23 @@ TestReport.prototype.onProxyRequest = function(request)
 {
 	//just check if request should be forwarded or kept, 
 	//do not actually do anything, wait for onProxyRequestCompleted
+
+	return false;
 }
 
-TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions, response)
+TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions, buffer, response)
 {
 	//check request and react accordingly
+	response.writeHead(200);
+	response.write("200");
+	response.write(buffer.toString());
+	response.end();
 }
 
 //Handler for responses to proxified requests
 TestReport.prototype.proxyResponse = function(params)
 {
-	
+	console.log("Proxyfing: " + params.RequestOptions.path);
 }
 
 TestReport.prototype._createPage = function(pageLoadedAction)

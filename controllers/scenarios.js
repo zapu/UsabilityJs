@@ -1,11 +1,7 @@
 
 //Install routes
 var router = require("../router");
-router.addRoute("/scenarios", listScenarios);
-router.addRoute("/scenarios/show/:id", showScenario);
-
 var templates = require("../templates");
-
 var scenariosModel = require("../models/scenarios");
 
 function listScenarios(request, response, params)
@@ -37,3 +33,8 @@ function showScenario(request, response, params)
 	});
 }
 
+module.exports.install = function(_testManager)
+{
+	router.addRoute("/scenarios", listScenarios);
+	router.addRoute("/scenarios/show/:id", showScenario);
+}
