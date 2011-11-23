@@ -1,6 +1,7 @@
 var actions = require("./actions");
 var page = require("./page");
 var request = require("./request");
+var fs = require("fs");
 
 function TestReport(uuid)
 {
@@ -33,10 +34,13 @@ TestReport.prototype.addAction = function(action)
 }
 
 //Handler for requests, can decide whether to forward it or not
-TestReport.prototype.onProxyRequest = function(request)
+TestReport.prototype.onProxyRequest = function(requestOptions)
 {
 	//just check if request should be forwarded or kept, 
 	//do not actually do anything, wait for onProxyRequestCompleted
+	if(requestOptions.path == "/__ujs_inject.js") {
+		return true;
+	}
 
 	return false;
 }
@@ -44,10 +48,17 @@ TestReport.prototype.onProxyRequest = function(request)
 TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions, buffer, response)
 {
 	//check request and react accordingly
-	response.writeHead(200);
-	response.write("200");
-	response.write(buffer.toString());
-	response.end();
+	if(requestOptions.path == "/__ujs_inject.js") {
+		fs.readFile("./injected_js/script.js", function(err, data){
+			if(err) {
+				response.writeHead(404);
+				response.end();
+			} else {
+				response.writeHead(200, {"Content-Type": "application/javascript"});
+				response.end(data);
+			}
+		});
+	}
 }
 
 //Handler for responses to proxified requests

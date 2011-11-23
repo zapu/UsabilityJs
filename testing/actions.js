@@ -9,8 +9,6 @@ function PageAction()
 function PageLoadedAction()
 {
 	PageLoadedAction.super_.call(this);	
-
-	
 }
 
 util.inherits(PageLoadedAction, PageAction);
@@ -50,13 +48,31 @@ function ElementBluredAction()
 
 util.inherits(ElementBluredAction, PageAction);
 
+//Action factory
+function CreateAction(payload)
+{
+	var actionType = module.exports.actions[payload.action];
+	if(actionType == undefined) {
+		return null;
+	}
+
+	var action = new actionType();
+	action.loadFromPayload(action);
+
+	return action;
+}
+
 //export ALL the classes!
 module.exports = {
-	PageAction: PageAction,
-	PageLoadedAction: PageLoadedAction,
-	ElementClickedAction: ElementClickedAction,
-	SubtreeModifiedAction: SubtreeModifiedAction,
-	KeyboardAction: KeyboardAction,
-	ElementFocusedAction: ElementFocusedAction,
-	ElementBluredAction: ElementBluredAction,
+	actions: {
+		PageAction: PageAction,
+		PageLoadedAction: PageLoadedAction,
+		ElementClickedAction: ElementClickedAction,
+		SubtreeModifiedAction: SubtreeModifiedAction,
+		KeyboardAction: KeyboardAction,
+		ElementFocusedAction: ElementFocusedAction,
+		ElementBluredAction: ElementBluredAction,
+	},
+
+	CreateAction: CreateAction,
 }
