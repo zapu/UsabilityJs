@@ -65,6 +65,12 @@ TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions
 TestReport.prototype.proxyResponse = function(params)
 {
 	console.log("Proxyfing: " + params.RequestOptions.path);
+	//Decide if inject <script src="__ujs_inject.js"
+	//Also decorate with __ujs_request_id var
+
+	if(params.ContentType.type == "text/html") {
+		params.DecorBuffer = "HERP DERP UJS";//new Buffer("Herp Derp UJS LOL");
+	}
 }
 
 TestReport.prototype._createPage = function(pageLoadedAction)

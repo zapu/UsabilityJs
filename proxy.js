@@ -154,35 +154,55 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 		proxyResponse.on("end", function(){
 			var buffer = GlueBuffers(chunks);
 
-			var decodedBuffer;
+			var decodedBuffer = buffer;
+			var compressed = false;
 			if(getHeader(proxyResponse.headers, "content-encoding") == "gzip") {
 				var gzip = new gzbz2.Gunzip;
 				gzip.init({encoding: "utf8"});
 				decodedBuffer = gzip.inflate(buffer, "utf8");
 				gzip.end();
+				compressed = true;
 			} else {
-				decodedBuffer = buffer.toString("utf8")
+				decodedBuffer = buffer
 			}
 
-			injectCookies(testReport, test_cookie, proxyResponse);
+			/*injectCookies(testReport, test_cookie, proxyResponse);
+
+			var decorBuffer = "";
 
 			if(testReport) {
 				var params = {
 					ContentType: content_type, 
 					RequestOptions: requestOptions,
-					Buffer: buffer,
+					Buffer: decodedBuffer,
 					OutBuffer: null,
+					DecorBuffer: null,
 				}
 
 				testReport.proxyResponse(params);
 				if(params.OutBuffer != null) {
-					buffer = params.OutBuffer;
+					decodedBuffer = params.OutBuffer;
 				}
-			}
+				if(params.DecorBuffer != null) {
+					decorBuffer = params.DecorBuffer;
+				}
+			}*/
 
 			response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
 			if(proxyResponse.statusCode != 304) { //if not "not modified" status
-				response.write(buffer);
+				if(compressed) {
+					var gzip = new gzbz2.Gzip;
+					gzip.init();
+					var gzdata = gzip.deflate(decodedBuffer);
+					var gzend = gzip.end();
+
+					var outBuffer = new Buffer(gzdata.length + gzend.length);
+					gzdata.copy(outBuffer, 0);
+					gzend.copy(outBuffer, gzdata.length);
+					response.write(outBuffer);
+				} else {
+					response.write(decodedBuffer);
+				}
 			}
 			response.end();
 		});
