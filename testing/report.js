@@ -67,9 +67,13 @@ TestReport.prototype.proxyResponse = function(params)
 	console.log("Proxyfing: " + params.RequestOptions.path);
 	//Decide if inject <script src="__ujs_inject.js"
 	//Also decorate with __ujs_request_id var
+	var testRequest = new request.TestRequest();
+	this.addRequest(testRequest);
 
 	if(params.ContentType.type == "text/html") {
-		params.DecorBuffer = "HERP DERP UJS";//new Buffer("Herp Derp UJS LOL");
+		var includeJs = "<script type=\"text/javascript\" src=\"/__ujs_inject.js\"></script>";
+		var requestId = "<script type=\"text/javascript\"> __ujs_request_id = " + testRequest.id + "; alert(__ujs_request_id); </script>";
+		params.DecorBuffer = new Buffer(includeJs + requestId);
 	}
 }
 

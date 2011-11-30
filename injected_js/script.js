@@ -1,1 +1,1 @@
-HERP DERP
+alert("inject.js reporting in");

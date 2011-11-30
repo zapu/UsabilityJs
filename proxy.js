@@ -41,6 +41,16 @@ function getHeader(headers, name)
 	return null;
 }
 
+function setHeader(headers, name, val)
+{
+	for(var key in headers) {
+		if(key.toLowerCase() == name) {
+			headers[key] = val;
+			return;
+		}
+	}
+}
+
 function getContentType(headers)
 {
 	var contentType = getHeader(headers, "content-type");
@@ -88,6 +98,8 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 		method: request.method,
 		headers: request.headers, //TODO: strip some headers?
 	};
+
+	setHeader(requestOptions.headers, "accept-encoding", "");
 
 	var request_cookies = new Cookies(request, null);
 
@@ -158,17 +170,17 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 			var compressed = false;
 			if(getHeader(proxyResponse.headers, "content-encoding") == "gzip") {
 				var gzip = new gzbz2.Gunzip;
-				gzip.init({encoding: "utf8"});
-				decodedBuffer = gzip.inflate(buffer, "utf8");
+				gzip.init();
+				decodedBuffer = gzip.inflate(buffer);
 				gzip.end();
 				compressed = true;
 			} else {
 				decodedBuffer = buffer
 			}
 
-			/*injectCookies(testReport, test_cookie, proxyResponse);
+			injectCookies(testReport, test_cookie, proxyResponse);
 
-			var decorBuffer = "";
+			var decorBuffer = null;
 
 			if(testReport) {
 				var params = {
@@ -186,24 +198,29 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 				if(params.DecorBuffer != null) {
 					decorBuffer = params.DecorBuffer;
 				}
-			}*/
+			}
+
+			//turn off gzip
+			setHeader(proxyResponse.headers, "content-encoding", "");
+			compressed = false;
 
 			response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
 			if(proxyResponse.statusCode != 304) { //if not "not modified" status
 				if(compressed) {
 					var gzip = new gzbz2.Gzip;
 					gzip.init();
-					var gzdata = gzip.deflate(decodedBuffer);
-					var gzend = gzip.end();
-
-					var outBuffer = new Buffer(gzdata.length + gzend.length);
-					gzdata.copy(outBuffer, 0);
-					gzend.copy(outBuffer, gzdata.length);
-					response.write(outBuffer);
+					response.write(gzip.deflate(decodedBuffer));
+					if(decorBuffer != null) {
+						response.write(gzip.deflate(decorBuffer));
+					}
+					response.write(gzip.end());
 				} else {
 					response.write(decodedBuffer);
+					if(decorBuffer != null)
+						response.write(decorBuffer);
 				}
 			}
+
 			response.end();
 		});
 	});
