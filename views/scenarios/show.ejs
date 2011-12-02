@@ -1,10 +1,11 @@
-<html>
-<head>
-<title>Scenario</title>
-</head>
-<body>
-Viewing scenario: <b><%= name %></b>
-<br/>
-Begin new <a href="/tests/begintest/<%= id %>">test</a>.
-</body>
-</html>
+<%-render("views/header.ejs", {PageTitle: "Scenario " + name})%>
+<%-render("views/nav.ejs")%>
+
+<div class="content-div">
+	Viewing scenario: <b><%= name %></b>
+	<br/>
+	Begin new <a href="/tests/begintest/<%= id %>">test</a>.
+</div>
+
+
+<%-render("views/footer.ejs")%>

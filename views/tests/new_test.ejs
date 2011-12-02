@@ -1,7 +1,7 @@
-<html>
-<head>
-</head>
-<body>
+<%-render("views/header.ejs", {PageTitle: "Scenario " + name})%>
+<%-render("views/nav.ejs")%>
+
+<div class="content-div">
 
 Scenario: <b><%= name %></b>
 
@@ -10,5 +10,6 @@ Scenario: <b><%= name %></b>
 <button name="submit">Begin test!</button>
 </form>
 
-</body>
-</html>
+</div>
+
+<%-render("views/footer.ejs")%>

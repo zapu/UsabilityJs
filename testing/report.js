@@ -21,7 +21,7 @@ TestReport.prototype.addRequest = function(request)
 
 TestReport.prototype.addAction = function(action)
 {
-	if(action instanceof actions.PageLoadedAction) {
+	if(action instanceof actions.actions.PageLoadedAction) {
 		var page = this._createPage(action);
 		return page;
 	} else {
@@ -29,7 +29,7 @@ TestReport.prototype.addAction = function(action)
 		page.request = this.requests[action.requestId];
 		page.addPageAction(action);
 
-		return 0;
+		return page;
 	}
 }
 
@@ -39,6 +39,8 @@ TestReport.prototype.onProxyRequest = function(requestOptions)
 	//just check if request should be forwarded or kept, 
 	//do not actually do anything, wait for onProxyRequestCompleted
 	if(requestOptions.path == "/__ujs_inject.js") {
+		return true;
+	} else if(requestOptions.path == "/__ujs_callback") {
 		return true;
 	}
 
@@ -58,6 +60,24 @@ TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions
 				response.end(data);
 			}
 		});
+	} else if(requestOptions.path == "/__ujs_callback") {
+		//get payload from post
+		try {
+			var payload = JSON.parse(buffer.toString());
+		} catch(err) {
+			console.log("ujs callback error " + err);
+			return;
+		}
+
+		var action = actions.CreateAction(payload);
+		if(action != null) {
+			var page = this.addAction(action);
+			var res = {ok: true, pageId: page.id};
+
+			response.writeHead(200, {"content-type": "application/json"});
+			response.write(JSON.stringify(res));
+			response.end();
+		}
 	}
 }
 
@@ -72,8 +92,8 @@ TestReport.prototype.proxyResponse = function(params)
 
 	if(params.ContentType.type == "text/html") {
 		var includeJs = "<script type=\"text/javascript\" src=\"/__ujs_inject.js\"></script>";
-		var requestId = "<script type=\"text/javascript\"> __ujs_request_id = " + testRequest.id + "; alert(__ujs_request_id); </script>";
-		params.DecorBuffer = new Buffer(includeJs + requestId);
+		var requestId = "<script type=\"text/javascript\"> __ujs_request_id = " + testRequest.id + ";</script>";
+		params.DecorBuffer = new Buffer(requestId + includeJs + "\n");
 	}
 }
 

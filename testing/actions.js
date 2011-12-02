@@ -13,6 +13,11 @@ function PageLoadedAction()
 
 util.inherits(PageLoadedAction, PageAction);
 
+PageLoadedAction.prototype.loadFromPayload = function(payload)
+{
+	this.requestId = payload.requestId;
+}
+
 function ElementClickedAction()
 {
 	ElementClickedAction.super_.call(this);
@@ -57,7 +62,7 @@ function CreateAction(payload)
 	}
 
 	var action = new actionType();
-	action.loadFromPayload(action);
+	action.loadFromPayload(payload);
 
 	return action;
 }

@@ -209,15 +209,15 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 				if(compressed) {
 					var gzip = new gzbz2.Gzip;
 					gzip.init();
-					response.write(gzip.deflate(decodedBuffer));
 					if(decorBuffer != null) {
 						response.write(gzip.deflate(decorBuffer));
 					}
+					response.write(gzip.deflate(decodedBuffer));
 					response.write(gzip.end());
 				} else {
-					response.write(decodedBuffer);
 					if(decorBuffer != null)
 						response.write(decorBuffer);
+					response.write(decodedBuffer);
 				}
 			}
 
