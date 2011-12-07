@@ -26,7 +26,6 @@ TestReport.prototype.addAction = function(action)
 		return page;
 	} else {
 		var page = this.pages[action.pageId];
-		page.request = this.requests[action.requestId];
 		page.addPageAction(action);
 
 		return page;
@@ -102,6 +101,7 @@ TestReport.prototype._createPage = function(pageLoadedAction)
 	var id = this.pages.length;
 	var test_page = new page.TestPage(id, pageLoadedAction);
 	this.pages.push(test_page);
+	test_page.request = this.requests[pageLoadedAction.requestId];
 	return test_page;
 }
 

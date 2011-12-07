@@ -6,6 +6,13 @@ function PageAction()
 	this.requestId = -1;
 }
 
+PageAction.prototype.loadFromPayload = function(payload)
+{
+	if(typeof payload.pageId != 'undefinied') {
+		this.pageId = payload.pageId;
+	}
+}
+
 function PageLoadedAction()
 {
 	PageLoadedAction.super_.call(this);	
@@ -15,6 +22,7 @@ util.inherits(PageLoadedAction, PageAction);
 
 PageLoadedAction.prototype.loadFromPayload = function(payload)
 {
+	PageAction.prototype.loadFromPayload.call(this, payload);
 	this.requestId = payload.requestId;
 }
 
@@ -24,6 +32,12 @@ function ElementClickedAction()
 }
 
 util.inherits(ElementClickedAction, PageAction);
+
+ElementClickedAction.prototype.loadFromPayload = function(payload)
+{
+	PageAction.prototype.loadFromPayload.call(this, payload);
+	this.element = payload.element;
+}
 
 function SubtreeModifiedAction()
 {
