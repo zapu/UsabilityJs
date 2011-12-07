@@ -25,7 +25,7 @@ module.exports = testCase({
 		this.report.addRequest(req);
 		test.ok(req.id == 0, "First request id == 0");
 
-		var page_action = new actions.PageLoadedAction();
+		var page_action = new actions.actions.PageLoadedAction();
 		page_action.requestId = req.id;
 		//adding PageLoadedAction creates new TestPage linked with TestRequest linked to action
 		var page = this.report.addAction(page_action); 
