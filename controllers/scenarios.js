@@ -20,7 +20,7 @@ function showScenario(request, response, params)
 {
 	response.writeHead(200);
 	
-	scenariosModel.getScenarioById(parseInt(params["id"]), function(scenario) {		
+	scenariosModel.getScenarioById(params["id"], function(scenario) {		
 		if(scenario == null) {
 			response.write("<b>scenario not found.</b>");
 			response.end();

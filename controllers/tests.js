@@ -8,7 +8,7 @@ var testManager = null;
 
 function beginTest(request, response, params)
 {
-	var scenario_id = parseInt(params["id"]);
+	var scenario_id = params["id"];
 	
 	scenariosModel.getScenarioById(scenario_id, function(scenario) {	
 		if(scenario == null) {

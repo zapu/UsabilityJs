@@ -1,5 +1,7 @@
 var mysql = require("mysql");
 
+return;
+
 var DATABASE = "usability";
 
 var client = mysql.createClient(

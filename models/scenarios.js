@@ -1,31 +1,33 @@
-var mysqlcli = require("../mysqlcli");
+var couch = require("../couchprovider");
 
 module.exports = 
 {
 	getAllScenarios: function(callback)
 	{
-		mysqlcli.query("SELECT * FROM `tests`", function(db_err, db_result, db_fields) {
-			if(db_err) {
-				throw db_err;
+		couch.db.get('_design/test/_view/scenarios', function(err, doc) {
+			if(err) {
+				throw err;
 			}
-			
-			//no magic to result here
-			
-			callback(db_result);
+
+			console.log(doc);
+
+			callback(doc);
 		});
 	},
 	
 	getScenarioById: function(id, callback)
 	{
-		mysqlcli.query("SELECT * FROM `tests` WHERE `id` = ?", [id], function(db_err, db_result, db_fields) {
-			if(db_err) {
-				throw db_err;
+		couch.db.get('_design/test/_view/scenarios?key="' + id + '"', function(err, doc) {
+			if(err) {
+				throw err;
 			}
 			
-			if(db_result.length == 0) {
-				callback(null);
+			console.log(id, doc);
+
+			if(doc.rows.length > 0) {
+				callback(doc.rows[0].value);
 			} else {
-				callback(db_result[0]);
+				callback(null);
 			}
 		});
 	}
