@@ -8,6 +8,7 @@ function TestReport(uuid)
 	this.pages = [];
 	this.requests = [];
 	this.uuid = uuid;
+	this.scenario = null;
 }
 
 TestReport.prototype.addRequest = function(request)
@@ -90,9 +91,13 @@ TestReport.prototype.proxyResponse = function(params)
 	this.addRequest(testRequest);
 
 	if(params.ContentType.type == "text/html") {
-		var includeJs = "<script type=\"text/javascript\" src=\"/__ujs_inject.js\"></script>";
-		var requestId = "<script type=\"text/javascript\"> __ujs_request_id = " + testRequest.id + ";</script>";
-		params.DecorBuffer = new Buffer(requestId + includeJs + "\n");
+		var tagStart = "<script type=\"text/javascript\"";
+		var tagEnd = "</script>";
+
+		var includeJs = tagStart + " src=\"/__ujs_inject.js\">" + tagEnd;
+		var requestId = tagStart + "> __ujs_request_id = " + testRequest.id + ";" + tagEnd;
+		var serializedScenario = tagStart + "> __ujs_scenario = " + JSON.stringify(this.scenario) + ";" + tagEnd;
+		params.DecorBuffer = new Buffer(requestId + serializedScenario + includeJs+ "\n");
 	}
 }
 
@@ -102,6 +107,7 @@ TestReport.prototype._createPage = function(pageLoadedAction)
 	var test_page = new page.TestPage(id, pageLoadedAction);
 	this.pages.push(test_page);
 	test_page.request = this.requests[pageLoadedAction.requestId];
+	test_page.date = new Date();
 	return test_page;
 }
 
