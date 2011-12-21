@@ -68,6 +68,7 @@ function staticRoute(request, response, params)
 
 function onRequest(request, response)
 {
+	//TODO: catch exceptions here, fail "gently" with 500 internal server error
 	if(!router.routeRequest(request, response)) {
 		global404(request, response);
 	}

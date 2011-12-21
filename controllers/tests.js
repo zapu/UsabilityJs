@@ -12,12 +12,10 @@ function beginTest(request, response, params)
 	
 	scenariosModel.getScenarioById(scenario_id, function(scenario) {	
 		if(scenario == null) {
-			
+			response.writeHead(404);
+			response.end();
 		} else {
-			var viewParams = {
-				id: scenario["id"],
-				name: scenario["name"],
-			};
+			var viewParams = { scenario: scenario };
 			var text = templates.render("views/tests/new_test.ejs", viewParams);
 			
 			response.end(text);
@@ -30,8 +28,6 @@ function beginNewTestPost(request, response, params)
 	var form = new formidable.IncomingForm();
 	form.parse(request, function(error, fields, files) {
 		var scenario_id = fields["scenario_id"];
-		console.log(fields);
-		
 		scenariosModel.getScenarioById(scenario_id, function(scenario) {
 			if(scenario == null) {
 				response.writeHead(200);

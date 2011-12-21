@@ -36,60 +36,13 @@
 		addScenarioBar();
 	}, false);
 
-
-	function anchor_AddEventHandler(type, listener, useCapture)
-	{
-		if(type == 'click') {
-			//we are hijacking that event
-			HTMLAnchorElement.prototype.realAddEventHandler.call(this, type, function(element) {
-				anchorEventListener(element);
-				listener(element);
-			}, useCapture);
-		} else {
-			HTMLAnchorElement.prototype.realAddEventHandler.call(this, type, listener, useCapture);
-		}
-	}
-
-	/* Prototype overriding */
-	function overridePrototypes()
-	{
-		return;
-		HTMLAnchorElement.prototype.realAddEventHandler = HTMLAnchorElement.prototype.addEventHandler;
-		HTMLAnchorElement.prototype.addEventHandler = anchor_AddEventHandler;
-		console.log(HTMLAnchorElement.prototype);
-
-		console.log("overriding prototypes");
-	}
-
-	function anchorEventListener(anchor)
-	{
-		var obj = {
-			action: "ElementClickedAction",
-			pageId: __ujs_page_id,
-			element: "derp",
-		}
-
-		sendPayload(obj);
-	}
-
-	/* DOM walking */
-	function walkDOM(element)
-	{
-		return;
-		var anchors = document.getElementsByTagName('a');
-		for(var i = 0; i < anchors.length; i++) {
-			var anchor = anchors[i];
-			anchor.addEventHandler('click', anchorEventListener, false);
-		}
-	}
-
 	function addScenarioBar()
 	{
 		var div = document.createElement('div');
 		div.style.fontSize = "14px";
 		div.style.fontWeight = "bold";
 		div.style.textAlign = "center";
-		div.style.position = "fixed";
+		//div.style.position = "fixed";
 		div.style.left = 0;
 		div.style.top = 0;
 		div.style.width = "80%";
@@ -102,6 +55,104 @@
 		console.log("added scenario bar... did it work?");
 	}
 
-	//mess with prototypes right away
-	overridePrototypes();
+	function getXPath(node, path) {
+		path = path || [];
+		if(node.parentNode) {
+			path = getXPath(node.parentNode, path);
+		}
+
+		if(node.previousSibling) {
+			var count = 1;
+			var sibling = node.previousSibling
+			do {
+				if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName) {count++;}
+					sibling = sibling.previousSibling;
+			} while(sibling);
+			if(count == 1) {count = null;}
+		} else if(node.nextSibling) {
+			var sibling = node.nextSibling;
+			do {
+				if(sibling.nodeType == 1 && sibling.nodeName == node.nodeName) {
+					var count = 1;
+					sibling = null;
+				} else {
+					var count = null;
+					sibling = sibling.previousSibling;
+				}
+			} while(sibling);
+		}
+
+		if(node.nodeType == 1) {
+			path.push(node.nodeName.toLowerCase() + (node.id ? "[@id='"+node.id+"']" : count > 0 ? "["+count+"]" : ''));
+		}
+		return path;
+	};
+
+	function serializeElement(element)
+	{
+		var obj = {
+			id: element.id,
+			tagName: element.tagName,
+			str: element.toString(),
+			XPath: getXPath(element),
+		}
+
+		return obj;
+	}
+
+	document.addEventListener('click', function(e) {
+		var target = e.target || e.originalTarget;
+		
+		if(target instanceof HTMLAnchorElement) {
+			var payload = {
+				action: "ElementClickedAction",
+				pageId: __ujs_page_id,
+				element: serializeElement(target),
+			};
+
+			sendPayload(payload);
+		}
+	}, true);
+
+	document.addEventListener('focus', function(e) {
+		var target = e.target || e.originalTarget;
+
+		if(target instanceof HTMLInputElement) {
+			var payload = {
+				action: "ElementFocusedAction",
+				pageId: __ujs_page_id,
+				element: serializeElement(target),
+			};
+
+			sendPayload(payload);
+		}
+	}, true);
+
+	document.addEventListener('blur', function(e) {
+		var target = e.target || e.originalTarget;
+
+		if(target instanceof HTMLInputElement) {
+			if(target._sentValue == undefined || target.value != target._sentValue) {
+				var payload = {
+					action: "InputValueChangedAction",
+					pageId: __ujs_page_id,
+					element: serializeElement(target),
+					value: target.value,
+				};
+
+				sendPayload(payload);
+				target._sentValue = target.value;
+			}
+		}
+
+		if(target instanceof HTMLInputElement) {
+			var payload = {
+				action: "ElementBlurredAction",
+				pageId: __ujs_page_id,
+				element: serializeElement(target),
+			};
+
+			sendPayload(payload);
+		}
+	}, true);
 })();

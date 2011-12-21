@@ -1,12 +1,12 @@
-<%-render("views/header.ejs", {PageTitle: "Scenario " + name})%>
+<%-render("views/header.ejs", {PageTitle: "Scenario " + scenario.name})%>
 <%-render("views/nav.ejs")%>
 
 <div class="content-div">
 
-Scenario: <b><%= name %></b>
+Scenario: <b><%= scenario.name %></b>
 
 <form method="POST" action="/tests/begin_new_test/">
-<input type="hidden" name="scenario_id" value="<%= id %>"/>
+<input type="hidden" name="scenario_id" value="<%= scenario._id %>"/>
 <button name="submit">Begin test!</button>
 </form>
 

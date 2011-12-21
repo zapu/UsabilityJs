@@ -60,12 +60,39 @@ function ElementFocusedAction()
 
 util.inherits(ElementFocusedAction, PageAction);
 
-function ElementBluredAction()
+ElementFocusedAction.prototype.loadFromPayload = function(payload)
 {
-	ElementBluredAction.super_.call(this);
+	PageAction.prototype.loadFromPayload.call(this, payload);
+	this.element = payload.element;
 }
 
-util.inherits(ElementBluredAction, PageAction);
+function ElementBlurredAction()
+{
+	ElementBlurredAction.super_.call(this);
+}
+
+util.inherits(ElementBlurredAction, PageAction);
+
+ElementBlurredAction.prototype.loadFromPayload = function(payload)
+{
+	PageAction.prototype.loadFromPayload.call(this, payload);
+	this.element = payload.element;
+}
+
+function InputValueChangedAction()
+{
+	InputValueChangedAction.super_.call(this);
+}
+
+util.inherits(InputValueChangedAction, PageAction);
+
+InputValueChangedAction.prototype.loadFromPayload = function(payload)
+{
+	PageAction.prototype.loadFromPayload.call(this, payload);
+	this.element = payload.element;
+	this.value = payload.value;
+}
+
 
 //Action factory
 function CreateAction(payload)
@@ -90,7 +117,8 @@ module.exports = {
 		SubtreeModifiedAction: SubtreeModifiedAction,
 		KeyboardAction: KeyboardAction,
 		ElementFocusedAction: ElementFocusedAction,
-		ElementBluredAction: ElementBluredAction,
+		ElementBlurredAction: ElementBlurredAction,
+		InputValueChangedAction: InputValueChangedAction,
 	},
 
 	CreateAction: CreateAction,

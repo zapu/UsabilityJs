@@ -23,27 +23,45 @@
 	</script>
 	
 	<div class="content-div">
-	
-	A test for scenario: <b><%= test.scenario.name %></b><br/>
+	<p>
+		<pre>
+			<%= JSON.stringify(test) %>
+		</pre>
+	</p>
+
+	<p>
+	A test for scenario: <b><%= test.scenario.name %></b>
+	</p>
+
+	<h2>pages</h2>
 	<ul id="testlist">
 		<% test.pages.forEach(function(page) { %>
 			<li>
 				<div>
-					Address: <%= page.address %><br/>
-					Referer: <%= page.referer %><br/>
+					<%= JSON.stringify(page) %><br/>
+					Request: <%= JSON.stringify(page.request) %><br/>
 					@: <%= page.date.toString() %><br/>
-					<% if(page.resources.length != 0) { %>
-						Resources:<br/>
+					<% if(page.actions.length != 0) { %>
+						Actions:<br/>
 						<ul>
-						<% page.resources.forEach(function(resource) { %>
+						<% page.actions.forEach(function(action) { %>
 							<li>
-								Address: <%= resource.address %><br/>
-								Content-Type: <%= resource.contentType %><br/>
-								@: <%= +resource.date %>
+								<pre><%= JSON.stringify(action) %></pre><br/>
 							</li>
 						<% }); %>
 						</ul>
 					<% } %>
+				</div>
+			</li>
+		<% }); %>
+	</ul>
+
+	<h2>requests</h2>
+	<ul id="testlist">
+		<% test.requests.forEach(function(request) { %>
+			<li>
+				<div>
+					<pre><%= JSON.stringify(request) %></pre>
 				</div>
 			</li>
 		<% }); %>

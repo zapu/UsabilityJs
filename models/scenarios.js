@@ -8,9 +8,7 @@ module.exports =
 			if(err) {
 				throw err;
 			}
-
-			console.log(doc);
-
+			
 			callback(doc);
 		});
 	},
@@ -21,8 +19,6 @@ module.exports =
 			if(err) {
 				throw err;
 			}
-			
-			console.log(id, doc);
 
 			if(doc.rows.length > 0) {
 				callback(doc.rows[0].value);
