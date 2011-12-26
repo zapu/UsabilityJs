@@ -124,3 +124,12 @@ body
 	border: 1px gray #CCC;
 	border-style: none none dotted;
 }
+
+p.description
+{
+	font-family: "Lucida Console", "Courier New";
+	color: brown;
+	margin-left: 10px;
+	padding-left: 3px;
+	border-left: 1px solid brown;
+}

@@ -1,7 +1,8 @@
 var cradle = require("cradle");
 
 var conn = new cradle.Connection(
-	"http://192.168.248.128", 5984, 
+	//"http://192.168.248.128", 5984, 
+	"http://192.168.248.131", 5984, 
 	{
 		cache: true,
 		raw: false,

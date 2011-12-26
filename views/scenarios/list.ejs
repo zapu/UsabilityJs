@@ -1,11 +1,31 @@
-<%-render("views/header.ejs", {PageTitle: "Scenarios"})%>
+<%-render("views/header.ejs", {PageTitle: "Scenarios " + site.name})%>
 <%-render("views/nav.ejs")%>
 
 <div class="content-div">
-	<% scenarios.forEach(function(scenario){ %>
-		<li><a href="./scenarios/show/<%= scenario["_id"] %>"><%= scenario["name"] %></a></li>
-	<% }); %>
+	<h1>Site "<%= site.name %>"</h1>
+	<p class="description">
+		<%- site.description %>
+	</p>
+	<p>
+		Website main URL: <a href="<%= site.url %>"><%= site.url %></a>
+	</p>
+	<h1>Scenarios</h1>
+	<p>
+		<ul>
+			<% site.scenarios.forEach(function(scenario){ %>
+				<li><a href="/scenarios/show/<%= scenario._id %>"><%= scenario.name %></a></li>
+			<% }); %>
+		</ul>
+	</p>
 </div>
 
+<div class="content-div">
+	<h2>Manage</h2>
+	<ul>
+		<li>Add Scenario</li>
+		<li>Edit Site</li>
+		<li>Remove Site</li>
+	</ul>
+</div>
 
 <%-render("views/footer.ejs")%>

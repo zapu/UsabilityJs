@@ -2,8 +2,14 @@
 <%-render("views/nav.ejs")%>
 
 <div class="content-div">
-
-Scenario: <b><%= scenario.name %></b>
+<p>
+	Scenario: <b><%= scenario.name %></b>
+</p>
+<p>
+	Remember to set your proxy.
+	<br/>
+	Clicking the "Begin test" button will redirect start test and redirect you to test page.
+</p>
 
 <form method="POST" action="/tests/begin_new_test/">
 <input type="hidden" name="scenario_id" value="<%= scenario._id %>"/>
