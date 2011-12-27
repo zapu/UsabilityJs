@@ -17,6 +17,12 @@
 			});
 		});
 
+		$("a.addTaskLink").click(function(){
+			$("#tasklist").append(generateTaskHTML());
+
+			rebindTaskListHandlers();
+		});
+
 		rebindTaskListHandlers();
 	});
 
@@ -30,34 +36,58 @@
 		});
 
 		$("#tasklist a.addLink").click(function(){
-			$(this).parent().after("<li>Derp</li>");
-		});
+			$(this).parent().after(generateTaskHTML());
 
+			rebindTaskListHandlers();
+		});
+	}
+
+	function generateTaskHTML()
+	{
+		return "<li>↕" +
+			"<input type=\"text\"/>" +
+			"× <a href=\"#\" class=\"removeLink\">Remove</a> | + <a href=\"#\" class=\"addLink\">Add</a>" +
+		"</li>";
 	}
 </script>
 
 <div class="content-div">
 	<h1>Editing scenario</h1>
+	<form>
 
+	<% if(scenario != null) { %>
+		<input type="hidden" name="scenario_id" value="<%=scenario._id%>"/>
+	<% } %>
+
+	<p>
+		Scenario name: <input type="text" name="scenario_name" value="<%=scenario ? scenario.name : ""%>"/>
+	</p>
+	<p>
+		Starting URL: <input type="text" name="starting_url" value="<%=scenario ? scenario.address : ""%>"/>
+	</p>
+	<p>
+		Description:<br/>
+		<textarea name="description"><%=scenario ? scenario.description : ""%></textarea>
+	</p>
+
+	<h2>Tasks</h2>
 	<ol id="tasklist">
-		<li>
-			↕
-			<input type="text" value="herp 1"/>
-			× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
-		</li>
-		<li>
-			↕
-			<input type="text" value="herp 2"/>
-			× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
-		</li>
-		<li>
-			↕
-			<input type="text" value="herp 3"/>
-			× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
-		</li>
+		<% if(scenario != null) { %>
+			<% scenario.tasks.forEach(function(task) { %>
+				<li>
+					↕
+					<input type="text" value="<%=task%>"/>
+					× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
+				</li>
+			<% }); %>
+		<% }%>
 	</ol>
 
-	<a href="#" class="derpLink">Derp</a>
+	</form>
+
+	<a href="#" class="addTaskLink">+ Add new task</a>
+
+	<a href="#" class="derpLink">console log</a>
 </div>
 
 <div class="content-div">

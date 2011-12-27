@@ -5,7 +5,7 @@
 	<ul>
 		<% sites.forEach(function(site) { %>
 			<li>
-				<a href="./scenarios/<%=site._id%>"><%=JSON.stringify(site)%></a>
+				<a href="./scenarios/<%=site._id%>"><%=site.name%></a>
 			</li>
 		<% }) %>
 	</ul>

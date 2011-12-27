@@ -61,18 +61,20 @@ function showScenario(request, response, params)
 
 function editScenarioForm(request, response, params)
 {
-	var viewParams = {};
+	scenariosModel.getScenarioById(params["id"], function(scenario) {		
+	scenariosModel.getSiteById(scenario.site_id, function(site) {		
+		if(scenario == null) {
+			response.writeHead(404);
+			response.end("<b>scenario not found.</b>");
+		} else {
+			var viewParams = {scenario: scenario, site: site};
+			var text = templates.render("views/scenarios/edit_scenario.ejs", viewParams);
 
-	if(params.length == 0) {
-		//edit without id is create new
-		viewParams["scenario"] = null;
-	} else {
-		viewParams["scenario"] = null;
-	}
-
-	var text = templates.render("views/scenarios/edit_scenario.ejs", viewParams);
-	response.writeHead(200);
-	response.end(text);
+			response.writeHead(200);		
+			response.end(text);
+		}
+	});
+	});
 }
 
 function editSiteForm(request, response, params)

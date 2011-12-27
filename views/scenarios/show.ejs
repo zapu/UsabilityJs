@@ -11,11 +11,11 @@
 	</p>
 	<p>
 		<b>Plan:</b><br/>
-		<ul>
-			<% scenario.plan.forEach(function(point) { %>
-				<li><%=point%></li>
+		<ol>
+			<% scenario.tasks.forEach(function(task) { %>
+				<li><%=task%></li>
 			<% }); %>
-		</ul>
+		</ol>
 	</p>
 	<p>
 		Begin new <a href="/tests/begintest/<%= scenario._id %>">test</a>.
