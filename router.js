@@ -22,7 +22,7 @@ Router.prototype.routeRequest = function(request, response)
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 

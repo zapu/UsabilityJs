@@ -1,0 +1,71 @@
+<%
+	var pageTitle = scenario ? ("Editing scenario " + scenario.name) : "New scenario";
+%>
+
+<%-render("views/header.ejs", {PageTitle: pageTitle})%>
+<%-render("views/nav.ejs")%>
+
+<script type="text/javascript" src="/static/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/static/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#tasklist").sortable();
+
+		$("a.derpLink").click(function(){
+			$("#tasklist").children().each(function(index){
+				console.log($(this).children('input')[0].value);
+			});
+		});
+
+		rebindTaskListHandlers();
+	});
+
+	function rebindTaskListHandlers()
+	{
+		$("#tasklist a.removeLink").click(function(){
+			var element = $(this).parent();
+			element.hide("slow", function(){
+				element.remove();
+			});
+		});
+
+		$("#tasklist a.addLink").click(function(){
+			$(this).parent().after("<li>Derp</li>");
+		});
+
+	}
+</script>
+
+<div class="content-div">
+	<h1>Editing scenario</h1>
+
+	<ol id="tasklist">
+		<li>
+			↕
+			<input type="text" value="herp 1"/>
+			× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
+		</li>
+		<li>
+			↕
+			<input type="text" value="herp 2"/>
+			× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
+		</li>
+		<li>
+			↕
+			<input type="text" value="herp 3"/>
+			× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
+		</li>
+	</ol>
+
+	<a href="#" class="derpLink">Derp</a>
+</div>
+
+<div class="content-div">
+	<h2>Manage</h2>
+	<ul>
+		<li>Remove Scenario</li>
+		<li>Edit Scenario</li>
+	</ul>
+</div>
+
+<%-render("views/footer.ejs")%>

@@ -133,3 +133,23 @@ p.description
 	padding-left: 3px;
 	border-left: 1px solid brown;
 }
+
+ul#tasklist
+{
+	width: 50%;
+}
+
+#tasklist li
+{
+	width: 50%;
+	height: 30px;
+	background-color: silver;
+	margin-top: 1px;
+	padding: 2px;
+	font-weight: bold;
+}
+
+#tasklist input
+{
+
+}

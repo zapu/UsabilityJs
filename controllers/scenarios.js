@@ -61,20 +61,35 @@ function showScenario(request, response, params)
 
 function editScenarioForm(request, response, params)
 {
+	var viewParams = {};
+
 	if(params.length == 0) {
 		//edit without id is create new
+		viewParams["scenario"] = null;
 	} else {
-		
+		viewParams["scenario"] = null;
 	}
+
+	var text = templates.render("views/scenarios/edit_scenario.ejs", viewParams);
+	response.writeHead(200);
+	response.end(text);
+}
+
+function editSiteForm(request, response, params)
+{
+	response.end();
 }
 
 module.exports.install = function(_testManager)
 {
-	router.addRoute("/scenarios/:id", listScenarios);
-	router.addRoute("/scenarios", listScenarios);
-
 	router.addRoute("/scenarios/show/:id", showScenario);
 
-	router.addRoute("/scenarios/edit/:id", editScenarioForm);
-	router.addRoute("/scenarios/edit", editScenarioForm);
+	router.addRoute("/scenarios/edit_scenario/:id", editScenarioForm);
+	router.addRoute("/scenarios/edit_scenario", editScenarioForm);
+
+	router.addRoute("/scenarios/edit_site/:id", editSiteForm);
+	router.addRoute("/scenarios/edit_site", editSiteForm);
+
+	router.addRoute("/scenarios/:id", listScenarios);
+	router.addRoute("/scenarios", listScenarios);
 }
