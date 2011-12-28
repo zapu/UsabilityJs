@@ -103,7 +103,9 @@
 	document.addEventListener('click', function(e) {
 		var target = e.target || e.originalTarget;
 		
-		if(target instanceof HTMLAnchorElement) {
+		console.log('click listener on ', target)
+
+		if(target instanceof HTMLAnchorElement || target instanceof HTMLSpanElement) {
 			var payload = {
 				action: "ElementClickedAction",
 				pageId: __ujs_page_id,

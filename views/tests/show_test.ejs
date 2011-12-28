@@ -24,12 +24,6 @@
 	
 	<div class="content-div">
 	<p>
-		<pre>
-			<%= JSON.stringify(test) %>
-		</pre>
-	</p>
-
-	<p>
 	A test for scenario: <b><%= test.scenario.name %></b>
 	</p>
 
@@ -38,15 +32,14 @@
 		<% test.pages.forEach(function(page) { %>
 			<li>
 				<div>
-					<%= JSON.stringify(page) %><br/>
-					Request: <%= JSON.stringify(page.request) %><br/>
+					<%= page.pageId %><br/>
 					@: <%= page.date.toString() %><br/>
 					<% if(page.actions.length != 0) { %>
 						Actions:<br/>
 						<ul>
 						<% page.actions.forEach(function(action) { %>
 							<li>
-								<pre><%= JSON.stringify(action) %></pre><br/>
+								<pre><%= typeof(action) %></pre><br/>
 							</li>
 						<% }); %>
 						</ul>
