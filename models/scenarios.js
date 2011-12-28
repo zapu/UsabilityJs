@@ -90,6 +90,64 @@ module.exports =
 				callback(site);
 			}
 		});
+	},
+
+	updateScenario: function(id, scenario, callback)
+	{
+		this.getScenarioById(id, function(current_scenario){
+			if(current_scenario == null) {
+				callback({ok: false, id: id}); //?
+				return;
+			}
+
+			couch.db.save(id, current_scenario._rev, scenario, function(err, res){
+				if(err) {
+					throw err;
+				} else {
+					callback(res);
+				}
+			});
+		});
+	},
+
+	addScenario: function(scenario, callback)
+	{
+		couch.db.save(scenario, function(err, res){
+			if(err) {
+				throw err;
+			} else {
+				callback(res);
+			}
+		});
+	},
+
+	updateSite: function(id, site, callback)
+	{
+		this.getSiteById(id, function(current_site){
+			if(site == null) {
+				callback(false);
+				return;
+			}
+
+			couch.db.save(id, current_site._rev, site, function(err, res){
+				if(err) {
+					throw err;
+				}
+
+				callback(res);
+			});
+		});
+	},
+	
+	addSite: function(site, callback)
+	{
+		couch.db.save(site, function(err, res){
+			if(err) {
+				throw err;
+			}
+
+			callback(res);
+		});
 	}
 }
 

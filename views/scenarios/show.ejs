@@ -10,7 +10,7 @@
 		<%- scenario.description %>
 	</p>
 	<p>
-		<b>Plan:</b><br/>
+		<b>Tasks:</b><br/>
 		<ol>
 			<% scenario.tasks.forEach(function(task) { %>
 				<li><%=task%></li>
@@ -26,7 +26,7 @@
 	<h2>Manage</h2>
 	<ul>
 		<li>Remove Scenario</li>
-		<li>Edit Scenario</li>
+		<li><a href="/scenarios/edit_scenario/<%=scenario._id%>">Edit Scenario</a></li>
 	</ul>
 </div>
 

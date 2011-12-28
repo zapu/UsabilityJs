@@ -1,0 +1,35 @@
+<%
+	var pageTitle = site ? ("Editing site " + site.name) : "New site";
+%>
+
+<%-render("views/header.ejs", {PageTitle: pageTitle})%>
+<%-render("views/nav.ejs")%>
+
+<div class="content-div">
+	<h1>Editing site</h1>
+	<form method="POST" action="/scenarios/edit_site_post">
+		<% if(site != null) { %>
+			<input type="hidden" name="site_id" value="<%=site._id%>"/>
+		<% } %>
+
+		<p>
+			Site name: <input type="text" name="site_name" value="<%=site ? site.name : ""%>"/>
+		</p>
+		<p>
+			Site URL: <input type="text" name="site_url" value="<%=site ? site.url : ""%>"/>
+		</p>
+		<p>
+			Description:<br/>
+			<textarea name="description"><%=site ? site.description : ""%></textarea>
+		</p>
+
+		<button name="submit">Accept</button> 
+		<% if(site == null) { %>
+			<a href="/scenarios">Back</a>
+		<% } else { %>
+			<a href="/scenarios/<%=site._id%>">Back</a>
+		<% } %>
+	</form>
+</div>
+
+<%-render("views/footer.ejs")%>

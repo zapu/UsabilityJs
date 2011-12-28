@@ -8,19 +8,28 @@
 <script type="text/javascript" src="/static/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="/static/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript">
+	function getTaskList()
+	{
+		var tasks = [];
+		$("#tasklist").children().each(function(index){
+			tasks.push($(this).children('input')[0].value);
+		});
+		return tasks;
+	}
+
 	$(document).ready(function(){
 		$("#tasklist").sortable();
-
-		$("a.derpLink").click(function(){
-			$("#tasklist").children().each(function(index){
-				console.log($(this).children('input')[0].value);
-			});
-		});
 
 		$("a.addTaskLink").click(function(){
 			$("#tasklist").append(generateTaskHTML());
 
 			rebindTaskListHandlers();
+			return false;
+		});
+
+		$("form").submit(function(){
+			var tasklist = JSON.stringify(getTaskList());
+			$("#taskInput").val(tasklist);
 		});
 
 		rebindTaskListHandlers();
@@ -28,17 +37,21 @@
 
 	function rebindTaskListHandlers()
 	{
-		$("#tasklist a.removeLink").click(function(){
+		$("#tasklist a.removeLink").unbind('click').click(function(){
 			var element = $(this).parent();
 			element.hide("slow", function(){
 				element.remove();
 			});
+
+			return false;
 		});
 
-		$("#tasklist a.addLink").click(function(){
+		$("#tasklist a.addLink").unbind('click').click(function(){
 			$(this).parent().after(generateTaskHTML());
 
 			rebindTaskListHandlers();
+			
+			return false;
 		});
 	}
 
@@ -53,49 +66,49 @@
 
 <div class="content-div">
 	<h1>Editing scenario</h1>
-	<form>
-
-	<% if(scenario != null) { %>
-		<input type="hidden" name="scenario_id" value="<%=scenario._id%>"/>
-	<% } %>
-
-	<p>
-		Scenario name: <input type="text" name="scenario_name" value="<%=scenario ? scenario.name : ""%>"/>
-	</p>
-	<p>
-		Starting URL: <input type="text" name="starting_url" value="<%=scenario ? scenario.address : ""%>"/>
-	</p>
-	<p>
-		Description:<br/>
-		<textarea name="description"><%=scenario ? scenario.description : ""%></textarea>
-	</p>
-
-	<h2>Tasks</h2>
-	<ol id="tasklist">
+	<form method="POST" action="/scenarios/edit_scenario_post">
 		<% if(scenario != null) { %>
-			<% scenario.tasks.forEach(function(task) { %>
-				<li>
-					↕
-					<input type="text" value="<%=task%>"/>
-					× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
-				</li>
-			<% }); %>
-		<% }%>
-	</ol>
+			<input type="hidden" name="scenario_id" value="<%=scenario._id%>"/>
+			<input type="hidden" name="site_id" value="<%=scenario.site_id%>"/>
+		<% } %>
 
+		<p>
+			Scenario name: <input type="text" name="scenario_name" value="<%=scenario ? scenario.name : ""%>"/>
+		</p>
+		<p>
+			Starting URL: <input type="text" name="starting_url" value="<%=scenario ? scenario.address : ""%>"/>
+		</p>
+		<p>
+			Description:<br/>
+			<textarea name="description"><%=scenario ? scenario.description : ""%></textarea>
+		</p>
+
+		<h2>Tasks</h2>
+		<ol id="tasklist">
+			<% if(scenario != null) { %>
+				<% scenario.tasks.forEach(function(task) { %>
+					<li>
+						↕ 
+						<input type="text" value="<%=task%>"/>
+						× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
+					</li>
+				<% }); %>
+			<% }%>
+		</ol>
+
+		<input type="hidden" name="tasks" id="taskInput" value="[]"/>
+
+		<button name="submit">Accept</button> 
+		<% if(scenario == null) { %>
+			<a href="/scenarios">Back</a>
+		<% } else { %>
+			<a href="/scenarios/show/<%=scenario._id%>">Back</a>
+		<% } %>
 	</form>
 
 	<a href="#" class="addTaskLink">+ Add new task</a>
 
 	<a href="#" class="derpLink">console log</a>
-</div>
-
-<div class="content-div">
-	<h2>Manage</h2>
-	<ul>
-		<li>Remove Scenario</li>
-		<li>Edit Scenario</li>
-	</ul>
 </div>
 
 <%-render("views/footer.ejs")%>
