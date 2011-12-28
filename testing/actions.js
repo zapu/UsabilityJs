@@ -26,6 +26,13 @@ PageLoadedAction.prototype.loadFromPayload = function(payload)
 	this.requestId = payload.requestId;
 }
 
+PageLoadedAction.prototype.getName = function()
+{
+	return "PageLoaded";
+}
+
+
+
 function ElementClickedAction()
 {
 	ElementClickedAction.super_.call(this);
@@ -38,6 +45,13 @@ ElementClickedAction.prototype.loadFromPayload = function(payload)
 	PageAction.prototype.loadFromPayload.call(this, payload);
 	this.element = payload.element;
 }
+
+ElementClickedAction.prototype.getName = function()
+{
+	return "ElementClicked";
+}
+
+
 
 function SubtreeModifiedAction()
 {
@@ -53,6 +67,9 @@ function KeyboardAction()
 
 util.inherits(KeyboardAction, PageAction);
 
+
+
+
 function ElementFocusedAction()
 {
 	ElementFocusedAction.super_.call(this);
@@ -65,6 +82,12 @@ ElementFocusedAction.prototype.loadFromPayload = function(payload)
 	PageAction.prototype.loadFromPayload.call(this, payload);
 	this.element = payload.element;
 }
+
+ElementFocusedAction.prototype.getName = function()
+{
+	return "ElementFocused";
+}
+
 
 function ElementBlurredAction()
 {
@@ -79,6 +102,13 @@ ElementBlurredAction.prototype.loadFromPayload = function(payload)
 	this.element = payload.element;
 }
 
+ElementBlurredAction.prototype.getName = function()
+{
+	return "ElementBlurred";
+}
+
+
+
 function InputValueChangedAction()
 {
 	InputValueChangedAction.super_.call(this);
@@ -91,6 +121,11 @@ InputValueChangedAction.prototype.loadFromPayload = function(payload)
 	PageAction.prototype.loadFromPayload.call(this, payload);
 	this.element = payload.element;
 	this.value = payload.value;
+}
+
+InputValueChangedAction.prototype.getName = function()
+{
+	return "InputValueChanged";
 }
 
 

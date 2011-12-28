@@ -32,14 +32,20 @@
 		<% test.pages.forEach(function(page) { %>
 			<li>
 				<div>
-					<%= page.pageId %><br/>
+					<b>Page: <%= page.pageLoadedAction %></b><br/>
 					@: <%= page.date.toString() %><br/>
 					<% if(page.actions.length != 0) { %>
 						Actions:<br/>
 						<ul>
 						<% page.actions.forEach(function(action) { %>
 							<li>
-								<pre><%= typeof(action) %></pre><br/>
+								<%= action.getName() %><br/>
+								<% if(action.element != undefined) { %>
+									On element: <b><%=action.element.tagName%> <%=action.element.id%></b><br/>
+								<% } %>
+								<% if(action.value != undefined) { %>
+									Value: <%=action.value%><br/>
+								<% } %>
 							</li>
 						<% }); %>
 						</ul>
