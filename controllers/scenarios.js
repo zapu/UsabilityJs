@@ -78,6 +78,22 @@ function editScenarioForm(request, response, params)
 	});
 }
 
+function newScenarioForm(request, response, params)
+{
+	scenariosModel.getSiteById(params.id, function(site) {	
+		if(site == null) {
+			response.writeHead(404);
+			response.end("<b>site not found.</b>");
+		} else {
+			var viewParams = {scenario: null, site: site};
+			var text = templates.render("views/scenarios/edit_scenario.ejs", viewParams);
+
+			response.writeHead(200);
+			response.end(text);
+		}
+	});
+}
+
 function editScenarioPost(request, response, params)
 {
 	var form = new formidable.IncomingForm();
@@ -144,6 +160,15 @@ function editSiteForm(request, response, params)
 	});
 }
 
+function newSiteForm(request, response, params)
+{
+	var viewParams = {site: null};
+	var text = templates.render("views/scenarios/edit_site.ejs", viewParams);
+
+	response.writeHead(200);
+	response.end(text);
+}
+
 function editSitePost(request, response, params)
 {
 	var form = new formidable.IncomingForm();
@@ -182,9 +207,11 @@ module.exports.install = function(_testManager)
 	router.addRoute("/scenarios/show/:id", showScenario);
 
 	router.addRoute("/scenarios/edit_scenario/:id", editScenarioForm);
+	router.addRoute("/scenarios/new_scenario/:id", newScenarioForm);
 	router.addRoute("/scenarios/edit_scenario_post", editScenarioPost);
 
 	router.addRoute("/scenarios/edit_site/:id", editSiteForm);
+	router.addRoute("/scenarios/new_site", newSiteForm);
 	router.addRoute("/scenarios/edit_site_post", editSitePost);
 
 	router.addRoute("/scenarios/:id", listScenarios);

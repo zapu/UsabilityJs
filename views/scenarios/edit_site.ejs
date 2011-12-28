@@ -6,7 +6,11 @@
 <%-render("views/nav.ejs")%>
 
 <div class="content-div">
-	<h1>Editing site</h1>
+	<% if(site != null) { %>
+		<h1>Editing site "<%=site.name%>"</h1>
+	<% } else { %>
+		<h1>Adding new site</h1>
+	<% } %>
 	<form method="POST" action="/scenarios/edit_site_post">
 		<% if(site != null) { %>
 			<input type="hidden" name="site_id" value="<%=site._id%>"/>

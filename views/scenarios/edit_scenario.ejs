@@ -65,12 +65,18 @@
 </script>
 
 <div class="content-div">
-	<h1>Editing scenario</h1>
+	<% if(scenario != null) { %>
+		<h1>Editing scenario "<%=scenario.name%>" on site "<%=site.name%>"</h1>
+	<% } else { %>
+		<h1>Adding scenario to site "<%=site.name%>"</h1>
+	<% } %>
+
 	<form method="POST" action="/scenarios/edit_scenario_post">
 		<% if(scenario != null) { %>
 			<input type="hidden" name="scenario_id" value="<%=scenario._id%>"/>
-			<input type="hidden" name="site_id" value="<%=scenario.site_id%>"/>
 		<% } %>
+
+		<input type="hidden" name="site_id" value="<%=site._id%>"/>
 
 		<p>
 			Scenario name: <input type="text" name="scenario_name" value="<%=scenario ? scenario.name : ""%>"/>
@@ -84,17 +90,20 @@
 		</p>
 
 		<h2>Tasks</h2>
-		<ol id="tasklist">
-			<% if(scenario != null) { %>
-				<% scenario.tasks.forEach(function(task) { %>
-					<li>
-						↕ 
-						<input type="text" value="<%=task%>"/>
-						× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
-					</li>
-				<% }); %>
-			<% }%>
-		</ol>
+		<p>
+			<ol id="tasklist">
+				<% if(scenario != null) { %>
+					<% scenario.tasks.forEach(function(task) { %>
+						<li>
+							↕ 
+							<input type="text" value="<%=task%>"/>
+							× <a href="#" class="removeLink">Remove</a> | + <a href="#" class="addLink">Add</a>
+						</li>
+					<% }); %>
+				<% }%>
+			</ol>
+			<a href="#" class="addTaskLink">+ Add new task</a>
+		</p>
 
 		<input type="hidden" name="tasks" id="taskInput" value="[]"/>
 
@@ -105,10 +114,6 @@
 			<a href="/scenarios/show/<%=scenario._id%>">Back</a>
 		<% } %>
 	</form>
-
-	<a href="#" class="addTaskLink">+ Add new task</a>
-
-	<a href="#" class="derpLink">console log</a>
 </div>
 
 <%-render("views/footer.ejs")%>
