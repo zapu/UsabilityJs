@@ -32,8 +32,8 @@
 		<% test.pages.forEach(function(page) { %>
 			<li>
 				<div>
-					<b>Page: <%= page.pageLoadedAction %></b><br/>
-					@: <%= page.date.toString() %><br/>
+					<b>Page: <%= page.request.path %></b><br/>
+					Time: <%= page.date.toString() %><br/>
 					<% if(page.actions.length != 0) { %>
 						Actions:<br/>
 						<ul>
@@ -59,9 +59,7 @@
 	<ul id="testlist">
 		<% test.requests.forEach(function(request) { %>
 			<li>
-				<div>
-					<pre><%= JSON.stringify(request) %></pre>
-				</div>
+				<%= request.id %> <%= request.path %>
 			</li>
 		<% }); %>
 	</ul>

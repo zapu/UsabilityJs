@@ -88,6 +88,7 @@ TestReport.prototype.proxyResponse = function(params)
 	//Decide if inject <script src="__ujs_inject.js"
 	//Also decorate with __ujs_request_id var
 	var testRequest = new request.TestRequest();
+	testRequest.path = params.RequestOptions.path;
 	this.addRequest(testRequest);
 
 	if(params.ContentType.type == "text/html") {

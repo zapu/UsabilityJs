@@ -32,7 +32,6 @@
 
 		console.log("inject.js reporting in " + __ujs_request_id + " " + __ujs_page_id);
 
-		walkDOM();
 		addScenarioBar();
 	}, false);
 
@@ -51,8 +50,6 @@
 
 		div.innerHTML = "<h1>Scenario " + __ujs_scenario.id + " \"" + __ujs_scenario.name + "\"</h1>";
 		document.body.insertBefore(div, document.body.firstChild);
-
-		console.log("added scenario bar... did it work?");
 	}
 
 	function getXPath(node, path) {
@@ -102,9 +99,7 @@
 
 	document.addEventListener('click', function(e) {
 		var target = e.target || e.originalTarget;
-		
-		console.log('click listener on ', target)
-
+	
 		if(target instanceof HTMLAnchorElement || target instanceof HTMLSpanElement) {
 			var payload = {
 				action: "ElementClickedAction",

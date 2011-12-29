@@ -7,6 +7,7 @@ function TestPage(id, action)
 
 	this.actions = [];
 	this.id = id;
+	this.request = null;
 }
 
 TestPage.prototype.addPageAction = function(action)
