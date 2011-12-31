@@ -1,6 +1,7 @@
 (function(){
 	var __ujs_scenario = <%-scenario%>;
 	var currentTask = <%-currentTask%>;
+	var testUUID = <%-uuid%>;
 
 	/* Function used to send javascript objects to host application */
 	function sendPayload(obj) {
@@ -215,7 +216,7 @@
 
 	function surrenderClicked()
 	{
-		
+		return false;
 	}
 
 	function previousTaskClicked()
@@ -228,6 +229,8 @@
 
 		checkTaskAnchorsVisible();
 		updateCurrentTaskParagraphs();
+
+		return false;
 	}
 
 	function nextTaskClicked()
@@ -237,14 +240,18 @@
 
 		currentTask++;
 		sendCurrentTask();
-		
+
 		checkTaskAnchorsVisible();
 		updateCurrentTaskParagraphs();
+
+		return false;
 	}
 
 	function finishClicked()
 	{
 		if(currentTask != __ujs_scenario.tasks.length-1)
 			return;
+
+		return false;
 	}
 })();

@@ -63,6 +63,7 @@ TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions
 		var params = {
 			scenario: JSON.stringify(this.scenario),
 			currentTask: this.currentTask,
+			uuid: this.uuid,
 		};
 
 		var text = templates.render("injected_js/script.ejs", params);

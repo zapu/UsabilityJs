@@ -10,7 +10,7 @@ function beginTest(request, response, params)
 {
 	var scenario_id = params["id"];
 	
-	scenariosModel.getScenarioById(scenario_id, function(scenario) {	
+	scenariosModel.getScenarioById(scenario_id, function(scenario) {
 		if(scenario == null) {
 			response.writeHead(404);
 			response.end();
@@ -73,6 +73,48 @@ function showTest(request, response, params)
 	response.end(text);
 }
 
+function endTest(request, response, params)
+{
+	response.writeHead(200);
+	
+	var testId = params["uuid"];
+	var test = testManager.testMap[testId];
+	if(test == null) {
+		response.write("no such test");
+		response.end();
+		return;
+	}
+
+	if(params["action"] != "surrender" && params["action"] != "finish") {
+		response.end();
+		return;
+	}
+
+	var viewParams = {
+		test: test,
+		action: params["action"],
+	};
+
+	var text = templates.render("views/tests/finish_surrender_test.ejs", viewParams);
+	response.end(text);
+}
+
+function endTestPost(request, response, params)
+{
+	var form = new formidable.IncomingForm();
+	form.parse(request, function(error, fields, files) {
+		response.writeHead(200);
+		
+		var testId = fields["uuid"];
+		var test = testManager.testMap[testId];
+		if(test == null) {
+			response.write("no such test");
+			response.end();
+			return;
+		}
+	}
+}
+
 module.exports.install = function(_testManager)
 {
 	testManager = _testManager;
@@ -80,5 +122,9 @@ module.exports.install = function(_testManager)
 	router.addRoute("/tests/begintest/:id", beginTest);
 	router.addRoute("/tests/begin_new_test", beginNewTestPost);
 	router.addRoute("/tests/show_test/:uuid", showTest);
+
+	router.addRoute("/tests/end_test/:action/:uuid", testAction);
+	router.addRoute("/tests/end_test_post", endTestPost);
+
 	router.addRoute("/tests", listTests);
 }
