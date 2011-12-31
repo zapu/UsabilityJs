@@ -3,12 +3,16 @@ var page = require("./page");
 var request = require("./request");
 var fs = require("fs");
 
+var templates = require("../templates");
+templates.addTemplate("injected_js/script.ejs");
+
 function TestReport(uuid)
 {
 	this.pages = [];
 	this.requests = [];
 	this.uuid = uuid;
 	this.scenario = null;
+	this.currentTask = 0;
 }
 
 TestReport.prototype.addRequest = function(request)
@@ -51,15 +55,15 @@ TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions
 {
 	//check request and react accordingly
 	if(requestOptions.path == "/__ujs_inject.js") {
-		fs.readFile("./injected_js/script.js", function(err, data){
-			if(err) {
-				response.writeHead(404);
-				response.end();
-			} else {
-				response.writeHead(200, {"Content-Type": "application/javascript"});
-				response.end(data);
-			}
-		});
+		var params = {
+			scenario: JSON.stringify(this.scenario),
+			currentTask: this.currentTask,
+		};
+
+		var text = templates.render("injected_js/script.ejs", params);
+
+		response.writeHead(200, {"Content-Type": "application/javascript"});
+		response.end(text);
 	} else if(requestOptions.path == "/__ujs_callback") {
 		//get payload from post
 		try {
@@ -97,8 +101,10 @@ TestReport.prototype.proxyResponse = function(params)
 
 		var includeJs = tagStart + " src=\"/__ujs_inject.js\">" + tagEnd;
 		var requestId = tagStart + "> __ujs_request_id = " + testRequest.id + ";" + tagEnd;
-		var serializedScenario = tagStart + "> __ujs_scenario = " + JSON.stringify(this.scenario) + ";" + tagEnd;
-		params.DecorBuffer = new Buffer(requestId + serializedScenario + includeJs+ "\n");
+
+		var stylesheet = "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://192.168.248.131:8080/static/injected_style.css\">";
+
+		params.DecorBuffer = new Buffer(requestId + stylesheet + includeJs + "\n");
 	}
 }
 
@@ -115,6 +121,11 @@ TestReport.prototype._createPage = function(pageLoadedAction)
 TestReport.prototype.getStartingLocation = function()
 {
 	return this.scenario["address"] + "?__ujs_token=" + this.uuid;
+}
+
+TestReport.prototype.getCurrentTaskObject = function()
+{
+	return this.scenario.tasks[this.currentTask];
 }
 
 module.exports = {

@@ -172,7 +172,7 @@ exports.ext = function () {
 			return (i < 0) ? '' : path.substr(i);
 		},
 		getContentType: function (ext) {
-			return extTypes[ext.toLowerCase()] || 'application/octet-stream';
+			return extTypes[ext.toLowerCase()] || extTypes[ext.toLowerCase().substring(1)] || 'application/octet-stream';
 		}
 	};
 }();

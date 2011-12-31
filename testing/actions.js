@@ -129,6 +129,22 @@ InputValueChangedAction.prototype.getName = function()
 }
 
 
+
+function TaskChangedAction()
+{
+	TaskChangedAction.super_.call(this);
+}
+
+util.inherits(TaskChangedAction, PageAction);
+
+TaskChangedAction.prototype.loadFromPayload = function(payload)
+{
+	PageAction.prototype.loadFromPayload.call(this, payload);
+	this.task = payload.task;
+}
+
+
+
 //Action factory
 function CreateAction(payload)
 {
@@ -154,6 +170,7 @@ module.exports = {
 		ElementFocusedAction: ElementFocusedAction,
 		ElementBlurredAction: ElementBlurredAction,
 		InputValueChangedAction: InputValueChangedAction,
+		TaskChangedAction: TaskChangedAction,
 	},
 
 	CreateAction: CreateAction,
