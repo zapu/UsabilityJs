@@ -42,10 +42,14 @@
 	function addScenarioBar()
 	{
 		var overlayHTML = "<div id=\"__ujs_div\">" +
-		"<h1>" + __ujs_scenario.name + "</h1>" +
-		"<p>Current task: <b>" + currentTask + "</b> " + __ujs_scenario.tasks[currentTask] + "</p>" +
-		"<p><i><a href=\"#\" id=\"__ujs_surrender_link\">Surrender</a><i></p>" +
-		"<p><b><a href=\"#\" id=\"__ujs_nexttask_link\">Next Task</a><b></p>" +
+		"<h1>Scenario: " + __ujs_scenario.name + "</h1>" +
+		"<p class=\"currentTaskNum\">Current task: <b>" + (currentTask+1) + "/" + (__ujs_scenario.tasks.length+1) + "</b></p>" +
+		"<p class=\"currentTask\">&bdquo; " + __ujs_scenario.tasks[currentTask] + " &rdquo;</p>" +
+		"<ul>" +
+		"<li><a href=\"#\" id=\"__ujs_surrender_link\">Surrender</a></li>" +
+		"<li><a href=\"#\" id=\"__ujs_previous_link\">Previous Task</a></li>" +
+		"<li><a href=\"#\" id=\"__ujs_next_link\">Next Task</a></li>" +
+		"</ul>" +
 		"</div>";
 
 		var div = document.createElement('div');

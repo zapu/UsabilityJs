@@ -1,25 +1,50 @@
-#__ujs_div * {
-	margin: 0;
-	padding: 0;
-	line-height: 100%;
-	font-family: Arial;
-}
-
 #__ujs_div {
 	border: 1px solid black;
 	z-index: 500;
 	background: white;
-	padding: 1px;
+	padding: 5px;
 	margin: 0;
-	width: 100%;
+	width: 60%;
+	margin-bottom: 5px;
+	margin: 0 auto;
+
+	border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+#__ujs_div * {
+	margin: 0;
+	padding: 0;
 	line-height: 100%;
+	font-family: Helvetica, Arial;
+	color: black;
 }
 
 #__ujs_div h1 {
-	font-family: "Comic Sans MS";
-	
+	font-size: 22px;
+}
+
+#__ujs_div ul {
+	display: inline;
+}
+
+#__ujs_div ul li {
+	display: inline;
+	padding: 3px 15px;
 }
 
 #__ujs_div p {
 	
+}
+
+#__ujs_div p.currentTask {
+	font-size: 26px;
+	line-height: 150%;
+	font-family: Georgia, Times, serif;
+}
+
+#__ujs_div p.currentTaskNum {
+	font-size: 16px;
+	line-height: 150%;
 }
