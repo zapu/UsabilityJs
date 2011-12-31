@@ -143,6 +143,10 @@ TaskChangedAction.prototype.loadFromPayload = function(payload)
 	this.task = payload.task;
 }
 
+TaskChangedAction.prototype.getName = function()
+{
+	return "TaskChanged";
+}
 
 
 //Action factory

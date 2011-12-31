@@ -34,6 +34,10 @@ TestReport.prototype.addAction = function(action)
 		var page = this.pages[action.pageId];
 		page.addPageAction(action);
 
+		if(action instanceof actions.actions.TaskChangedAction) {
+			this.currentTask = action.task;
+		}
+
 		return page;
 	}
 }

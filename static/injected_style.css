@@ -38,13 +38,13 @@
 	
 }
 
-#__ujs_div p.currentTask {
+#__ujs_div p#__ujs_currentTask {
 	font-size: 26px;
 	line-height: 150%;
 	font-family: Georgia, Times, serif;
 }
 
-#__ujs_div p.currentTaskNum {
+#__ujs_div p#__ujs_currentTaskNum {
 	font-size: 16px;
 	line-height: 150%;
 }
