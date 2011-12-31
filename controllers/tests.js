@@ -112,7 +112,7 @@ function endTestPost(request, response, params)
 			response.end();
 			return;
 		}
-	}
+	});
 }
 
 module.exports.install = function(_testManager)
@@ -123,7 +123,7 @@ module.exports.install = function(_testManager)
 	router.addRoute("/tests/begin_new_test", beginNewTestPost);
 	router.addRoute("/tests/show_test/:uuid", showTest);
 
-	router.addRoute("/tests/end_test/:action/:uuid", testAction);
+	router.addRoute("/tests/end_test/:action/:uuid", endTest);
 	router.addRoute("/tests/end_test_post", endTestPost);
 
 	router.addRoute("/tests", listTests);
