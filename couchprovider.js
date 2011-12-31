@@ -1,15 +1,15 @@
 var cradle = require("cradle");
+var config = require("./config");
 
 var conn = new cradle.Connection(
-	//"http://192.168.248.128", 5984, 
-	"http://192.168.248.131", 5984, 
+	config.couch_address, config.couch_port, 
 	{
 		cache: true,
 		raw: false,
 	}
 );
 
-var db = conn.database('usabilityjs');
+var db = conn.database(config.couch_db);
 
 db.exists(function(err, exists) {
 	if(err) {

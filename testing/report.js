@@ -2,6 +2,7 @@ var actions = require("./actions");
 var page = require("./page");
 var request = require("./request");
 var fs = require("fs");
+var config = require("../config");
 
 var templates = require("../templates");
 templates.addTemplate("injected_js/script.ejs");
@@ -102,7 +103,7 @@ TestReport.prototype.proxyResponse = function(params)
 		var includeJs = tagStart + " src=\"/__ujs_inject.js\">" + tagEnd;
 		var requestId = tagStart + "> __ujs_request_id = " + testRequest.id + ";" + tagEnd;
 
-		var stylesheet = "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://192.168.248.131:8080/static/injected_style.css\">";
+		var stylesheet = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + config.url + "static/injected_style.css\">";
 
 		params.DecorBuffer = new Buffer(requestId + stylesheet + includeJs + "\n");
 	}
