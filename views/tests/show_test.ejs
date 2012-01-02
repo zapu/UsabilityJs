@@ -27,6 +27,30 @@
 	A test for scenario: <b><%= test.scenario.name %></b>
 	</p>
 
+	<h2>Tasks</h2>
+	<table>
+		<%
+		for(var key in test.scenario.tasks) { 
+			var taskName = test.scenario.tasks[key];
+		%>
+			<tr>
+				<td>
+					<%=(parseInt(key)+1)%> 
+				</td>
+				<td>
+					<% if(test.currentTask == key) { %>
+						<b>
+					<% } %>
+						<%=taskName%>
+					<% if(test.currentTask == key) { %>
+						</b>
+					<% } %>
+					(<%=test.getTaskTotalTime(parseInt(key))%> seconds)
+				</td>
+			</tr>
+		<% } %>
+	</table>
+
 	<h2>pages</h2>
 	<ul id="testlist">
 		<% test.pages.forEach(function(page) { %>
@@ -39,7 +63,7 @@
 						<ul>
 						<% page.actions.forEach(function(action) { %>
 							<li>
-								<%= action.getName() %><br/>
+								<%= action.getName() %> (during task: <%=(action.taskNum + 1)%>)<br/>
 								<% if(action.element != undefined) { %>
 									On element: <b><%=action.element.tagName%> <%=action.element.id%></b><br/>
 								<% } %>

@@ -4,6 +4,7 @@ function PageAction()
 {
 	this.pageId = -1;
 	this.requestId = -1;
+	this.taskNum = 0;
 }
 
 PageAction.prototype.loadFromPayload = function(payload)

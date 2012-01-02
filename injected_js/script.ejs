@@ -2,6 +2,7 @@
 	var __ujs_scenario = <%-scenario%>;
 	var currentTask = <%-currentTask%>;
 	var testUUID = "<%-uuid%>";
+	var ujsUrl = "<%-ujsUrl%>";
 
 	/* Function used to send javascript objects to host application */
 	function sendPayload(obj) {
@@ -216,6 +217,8 @@
 
 	function surrenderClicked()
 	{
+		window.location.href = ujsUrl + "tests/end_test/surrender/" + testUUID;
+
 		return false;
 	}
 
@@ -251,6 +254,8 @@
 	{
 		if(currentTask != __ujs_scenario.tasks.length-1)
 			return;
+
+		window.location.href = ujsUrl + "tests/end_test/finish/" + testUUID;
 
 		return false;
 	}

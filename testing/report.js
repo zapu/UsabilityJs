@@ -14,10 +14,29 @@ function TestReport(uuid)
 	this.uuid = uuid;
 	this.scenario = null;
 	this.currentTask = 0;
+	this.active = true;
+	this.lastTaskChangeTime = 0;
+	this.taskInfos = [];
+}
+
+TestReport.prototype.setCurrentTask = function(task)
+{
+	if(task == this.currentTask)
+		return;
+
+	this.taskInfos[this.currentTask].time += new Date() - this.lastTaskChangeTime;
+	this.lastTaskChangeTime = new Date();
+
+	this.currentTask = task;
 }
 
 TestReport.prototype.addRequest = function(request)
 {
+	if(this.requests.length == 0) {
+		//first request
+		this.lastTaskChangeTime = new Date();
+	}
+
 	var id = this.requests.length;
 	request.id = id;
 	this.requests.push(request);
@@ -27,6 +46,8 @@ TestReport.prototype.addRequest = function(request)
 
 TestReport.prototype.addAction = function(action)
 {
+	action.taskNum = this.currentTask;
+
 	if(action instanceof actions.actions.PageLoadedAction) {
 		var page = this._createPage(action);
 		return page;
@@ -35,7 +56,7 @@ TestReport.prototype.addAction = function(action)
 		page.addPageAction(action);
 
 		if(action instanceof actions.actions.TaskChangedAction) {
-			this.currentTask = action.task;
+			this.setCurrentTask(action.task);
 		}
 
 		return page;
@@ -64,6 +85,7 @@ TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions
 			scenario: JSON.stringify(this.scenario),
 			currentTask: this.currentTask,
 			uuid: this.uuid,
+			ujsUrl: config.url,
 		};
 
 		var text = templates.render("injected_js/script.ejs", params);
@@ -75,7 +97,7 @@ TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions
 		try {
 			var payload = JSON.parse(buffer.toString());
 		} catch(err) {
-			console.log("ujs callback error " + err);
+			console.log("ujs callback error ", err);
 			return;
 		}
 
@@ -132,6 +154,28 @@ TestReport.prototype.getStartingLocation = function()
 TestReport.prototype.getCurrentTaskObject = function()
 {
 	return this.scenario.tasks[this.currentTask];
+}
+
+TestReport.prototype.setScenario = function(scenario)
+{
+	this.scenario = scenario;
+
+	var that = this;
+	//Add empty taskinfos
+	scenario.tasks.forEach(function(task){
+		that.taskInfos.push({
+			time: 0,
+		});
+	});
+}
+
+TestReport.prototype.getTaskTotalTime = function(tasknum)
+{
+	if(this.active && this.currentTask == tasknum) {
+		return (new Date() - this.lastTaskChangeTime) + this.taskInfos[tasknum].time;
+	}
+
+	return this.taskInfos[tasknum].time;
 }
 
 module.exports = {
