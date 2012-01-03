@@ -100,6 +100,23 @@
 					</td>
 					<td>
 						<%= action.getName() %>
+						<% if(typeof(action.element) != 'undefined') { %>
+							<div class="elementDesc">
+								<span class="elementTagName" title="Element's tag name"><%= action.element.tagName %></span>
+								<% if (action.element.id != "") { %>
+									<span class="elementId" title="Element's id">#<%= action.element.id %></span>
+								<% } %>
+								<% if (action.element.name != "") { %>
+									<span class="elementId" title="Element's name"><%= action.element.name %></span>
+								<% } %>
+								<span class="elementPath" title="Element's DOM XPath"><%= action.element.XPath %></span>
+							</div>
+						<% } %>
+						<% if(typeof(action.value) != 'undefined') { %>
+							<div>
+								Value: <span class="actionValue"><%=action.value%></span>
+							</div>
+						<% } %>
 					</td>
 				</tr>
 			<% } %>

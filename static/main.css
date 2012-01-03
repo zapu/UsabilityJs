@@ -169,3 +169,29 @@ td {
 td {
 	padding: 2px;
 }
+
+div.elementDesc span {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background-color: #5F99CF;
+	color: white;
+	padding: 0 2px 0 2px;
+}
+
+div.elementDesc span.elementTagName {
+	background-color: #5F99CF;
+}
+
+div.elementDesc span.elementId {
+	background-color: #3F99CF;
+}
+
+div.elementDesc span.elementPath {
+	background-color: #7F56CF;
+	font-size: 80%;
+}
+
+span.actionValue {
+	font-family: "Courier New";
+	font-size: 80%;
+}
