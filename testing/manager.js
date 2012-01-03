@@ -34,6 +34,7 @@ TestManager.prototype._createTestReport = function(scenario)
 	var test = new TestReport(uuid);
 	this.testMap[uuid] = test;
 	test.setScenario(scenario);
+	test.reportStartTime = new Date();
 	return test;
 }
 

@@ -29,6 +29,11 @@
 
 	<h2>Tasks</h2>
 	<table>
+		<tr>
+			<th></th>
+			<th>Task description</th>
+			<th>Time</th>
+		</tr>
 		<%
 		for(var key in test.scenario.tasks) { 
 			var taskName = test.scenario.tasks[key];
@@ -45,39 +50,61 @@
 					<% if(test.currentTask == key) { %>
 						</b>
 					<% } %>
-					(<%=test.getTaskTotalTime(parseInt(key))%> seconds)
+				</td>
+				<td>
+					<%=test.getTaskTotalTime(parseInt(key))/1000 | 0%>
 				</td>
 			</tr>
 		<% } %>
 	</table>
 
-	<h2>pages</h2>
-	<ul id="testlist">
-		<% test.pages.forEach(function(page) { %>
-			<li>
-				<div>
-					<b>Page: <%= page.request.path %></b><br/>
-					Time: <%= page.date.toString() %><br/>
-					<% if(page.actions.length != 0) { %>
-						Actions:<br/>
-						<ul>
-						<% page.actions.forEach(function(action) { %>
-							<li>
-								<%= action.getName() %> (during task: <%=(action.taskNum + 1)%>)<br/>
-								<% if(action.element != undefined) { %>
-									On element: <b><%=action.element.tagName%> <%=action.element.id%></b><br/>
-								<% } %>
-								<% if(action.value != undefined) { %>
-									Value: <%=action.value%><br/>
-								<% } %>
-							</li>
-						<% }); %>
-						</ul>
-					<% } %>
-				</div>
-			</li>
+	<% var lastTaskNum = 0; %>
+
+	<%
+		function foreachEverything(test, callback) {
+			test.pages.forEach(function(page) {
+				callback(page, null, page.pageLoadedAction.taskNum);
+				page.actions.forEach(function(action) {
+					callback(page, action, action.taskNum);
+				});
+			});
+		}
+	%>
+
+	<h2>Test progress</h2>
+	<table>
+		<% foreachEverything(test, function(page, action, tasknum) { %>
+			<% 
+			if(lastTaskNum != tasknum) { 
+				lastTaskNum = tasknum;
+			%>
+				<tr>
+					<td colspan="2">
+						Task changed to: <%=(tasknum+1)%>.
+					</td>
+				</tr>				
+			<% } %>
+			<% if(action == null) { %>
+				<tr>
+					<td>
+						<%=page.pageLoadedAction.deltatime.hours%>:<%=page.pageLoadedAction.deltatime.minutes%>:<%=page.pageLoadedAction.deltatime.seconds%>
+					</td>
+					<td>
+						<b>Webpage loaded:</b> <%= page.request.path %>
+					</td>
+				</tr>
+			<% } else { %>
+				<tr>
+					<td>
+						<%=action.deltatime.hours%>:<%=action.deltatime.minutes%>:<%=action.deltatime.seconds%>
+					</td>
+					<td>
+						<%= action.getName() %>
+					</td>
+				</tr>
+			<% } %>
 		<% }); %>
-	</ul>
+	</table>
 
 	<h2>requests</h2>
 	<ul id="testlist">

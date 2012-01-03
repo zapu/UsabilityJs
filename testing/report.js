@@ -9,14 +9,20 @@ templates.addTemplate("injected_js/script.ejs");
 
 function TestReport(uuid)
 {
-	this.pages = [];
-	this.requests = [];
 	this.uuid = uuid;
 	this.scenario = null;
-	this.currentTask = 0;
+
+	this.pages = [];
+	this.requests = [];
+
 	this.active = true;
+
+	this.currentTask = 0;
 	this.lastTaskChangeTime = 0;
 	this.taskInfos = [];
+
+	this.reportStartTime = 0;
+	this.reportEndTime = 0;
 }
 
 TestReport.prototype.setCurrentTask = function(task)
@@ -47,6 +53,8 @@ TestReport.prototype.addRequest = function(request)
 TestReport.prototype.addAction = function(action)
 {
 	action.taskNum = this.currentTask;
+	action.time = new Date();
+	action.deltatime = this.getRelativeFormattedTime(action.time);
 
 	if(action instanceof actions.actions.PageLoadedAction) {
 		var page = this._createPage(action);
@@ -176,6 +184,23 @@ TestReport.prototype.getTaskTotalTime = function(tasknum)
 	}
 
 	return this.taskInfos[tasknum].time;
+}
+
+TestReport.prototype.getRelativeFormattedTime = function(time)
+{
+	var t = time - this.reportStartTime;
+	var result = {
+		totalms: t,
+	};
+
+	result.hours = t / 3600000 | 0;
+	t = t % 3600000;
+	result.minutes = t / 60000 | 0;
+	t = t % 60000;
+	result.seconds = t / 1000 | 0; 
+	result.milliseconds = t % 1000;
+
+	return result;
 }
 
 module.exports = {
