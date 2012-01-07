@@ -17,8 +17,19 @@
 			<% }); %>
 		</ol>
 	</p>
+</div>
+
+<div class="content-div">
 	<p>
-		Begin new <a href="/tests/begintest/<%= scenario._id %>">test</a>.
+		Remember to set up your proxy.
+		<br/>
+		Clicking the "Begin test" button will redirect start test and redirect you to test page.
+	</p>
+	<p>
+		<form method="POST" action="/tests/begin_new_test/">
+		<input type="hidden" name="scenario_id" value="<%= scenario._id %>"/>
+		<button name="submit">Begin test!</button>
+		</form>
 	</p>
 </div>
 

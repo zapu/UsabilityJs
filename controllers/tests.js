@@ -85,17 +85,11 @@ function endTest(request, response, params)
 		return;
 	}
 
-	if(params["action"] != "surrender" && params["action"] != "finish") {
-		response.end();
-		return;
-	}
-
 	var viewParams = {
 		test: test,
-		action: params["action"],
 	};
 
-	var text = templates.render("views/tests/finish_surrender_test.ejs", viewParams);
+	var text = templates.render("views/tests/end_test.ejs", viewParams);
 	response.end(text);
 }
 
@@ -104,6 +98,8 @@ function endTestPost(request, response, params)
 	var form = new formidable.IncomingForm();
 	form.parse(request, function(error, fields, files) {
 		response.writeHead(200);
+
+		console.log(fields);
 		
 		var testId = fields["uuid"];
 		var test = testManager.testMap[testId];
@@ -112,6 +108,8 @@ function endTestPost(request, response, params)
 			response.end();
 			return;
 		}
+
+		response.end("herp derp");
 	});
 }
 
@@ -123,7 +121,7 @@ module.exports.install = function(_testManager)
 	router.addRoute("/tests/begin_new_test", beginNewTestPost);
 	router.addRoute("/tests/show_test/:uuid", showTest);
 
-	router.addRoute("/tests/end_test/:action/:uuid", endTest);
+	router.addRoute("/tests/end_test/:uuid", endTest);
 	router.addRoute("/tests/end_test_post", endTestPost);
 
 	router.addRoute("/tests", listTests);

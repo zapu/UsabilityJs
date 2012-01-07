@@ -2,8 +2,22 @@
 <%-render("views/nav.ejs")%>
 
 <div class="content-div">
-<h1><%=action%> test?</h1>
-<h2>nay/nay</h2>
+<h1>Ending test for <%=test.scenario.name%></h1>
+</div>
+
+<div class="content-div">
+	<form action="/tests/end_test_post">
+		<p>
+			Feedback:
+			<textarea name="feedback"></textarea>
+
+			<br/>
+
+			<button type="submit" name="action" value="Success"/>
+			<br/>
+			<button type="submit" name="action" value="Failure"/>
+		</p>
+	</form>
 </div>
 
 <%-render("views/footer.ejs")%>
