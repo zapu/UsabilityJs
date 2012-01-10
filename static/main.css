@@ -195,3 +195,8 @@ span.actionValue {
 	font-family: "Courier New";
 	font-size: 80%;
 }
+
+textarea {
+	width: 60%;
+	height: 250px;
+}

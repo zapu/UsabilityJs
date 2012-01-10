@@ -1,4 +1,4 @@
-<%-render("views/header.ejs", {PageTitle: action + " test"})%>
+<%-render("views/header.ejs", {PageTitle: "Finish test"})%>
 <%-render("views/nav.ejs")%>
 
 <div class="content-div">
@@ -6,16 +6,16 @@
 </div>
 
 <div class="content-div">
-	<form action="/tests/end_test_post">
+	<form action="/tests/end_test_post" method="POST">
 		<p>
-			Feedback:
+			Feedback:<br/>
 			<textarea name="feedback"></textarea>
 
 			<br/>
 
-			<button type="submit" name="action" value="Success"/>
+			<button type="submit" name="action" value="failure">Failure</button>
 			<br/>
-			<button type="submit" name="action" value="Failure"/>
+			<button type="submit" name="action" value="success">Success</button>
 		</p>
 	</form>
 </div>

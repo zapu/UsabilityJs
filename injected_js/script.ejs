@@ -57,7 +57,6 @@
 		"<p id=\"__ujs_currentTaskNum\"></p>" +
 		"<p id=\"__ujs_currentTask\"></p>" +
 		"<ul>" +
-		"<li><a href=\"#\" id=\"__ujs_surrender_link\">Surrender</a></li>" +
 		"<li><a href=\"#\" id=\"__ujs_previous_link\">Previous Task</a></li>" +
 		"<li><a href=\"#\" id=\"__ujs_next_link\">Next Task</a></li>" +
 		"<li><a href=\"#\" id=\"__ujs_finish_link\">Finish test</a></li>" +
@@ -68,12 +67,10 @@
 		div.innerHTML = overlayHTML;
 		document.body.insertBefore(div.firstChild, document.body.firstChild);
 
-		var surrenderAnchor = document.getElementById("__ujs_surrender_link");
 		var previousAnchor = document.getElementById("__ujs_previous_link");
 		var nextAnchor = document.getElementById("__ujs_next_link");
 		var finishAnchor = document.getElementById("__ujs_finish_link");
 
-		surrenderAnchor.addEventListener("click", surrenderClicked);
 		previousAnchor.addEventListener("click", previousTaskClicked);
 		nextAnchor.addEventListener("click", nextTaskClicked);
 		finishAnchor.addEventListener("click", finishClicked);
@@ -84,7 +81,6 @@
 
 	function checkTaskAnchorsVisible()
 	{
-		var surrenderAnchor = document.getElementById("__ujs_surrender_link");
 		var previousAnchor = document.getElementById("__ujs_previous_link");
 		var nextAnchor = document.getElementById("__ujs_next_link");
 		var finishAnchor = document.getElementById("__ujs_finish_link");
@@ -92,14 +88,14 @@
 		if(currentTask == 0) {
 			previousAnchor.style.visibility = "hidden";
 			nextAnchor.style.visibility = "visible";
-			finishAnchor.style.visibility = "hidden";
+			finishAnchor.innerHTML = "Finish test";
 		} else if(currentTask == __ujs_scenario.tasks.length-1) {
 			nextAnchor.style.visibility = "hidden";
-			finishAnchor.style.visibility = "visible";
+			finishAnchor.innerHTML = "Finish test";
 		} else {
 			previousAnchor.style.visibility = "visible";
 			nextAnchor.style.visibility = "visible";
-			finishAnchor.style.visibility = "hidden";
+			finishAnchor.innerHTML = "Finish test";
 		}
 	}
 
@@ -216,13 +212,6 @@
 		sendPayload(payload);
 	}
 
-	function surrenderClicked()
-	{
-		window.location.href = ujsUrl + "tests/end_test/surrender/" + testUUID;
-
-		return false;
-	}
-
 	function previousTaskClicked()
 	{
 		if(currentTask == 0)
@@ -253,10 +242,7 @@
 
 	function finishClicked()
 	{
-		if(currentTask != __ujs_scenario.tasks.length-1)
-			return;
-
-		window.location.href = ujsUrl + "tests/end_test/finish/" + testUUID;
+		window.location.href = ujsUrl + "tests/end_test/" + testUUID;
 
 		return false;
 	}

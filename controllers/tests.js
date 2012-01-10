@@ -109,7 +109,8 @@ function endTestPost(request, response, params)
 			return;
 		}
 
-		response.end("herp derp");
+		test.active = false;
+		test.success = (fields["action"] == "success");
 	});
 }
 
