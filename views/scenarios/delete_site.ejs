@@ -1,0 +1,21 @@
+<%
+	var pageTitle = "Delete site " + site.name;
+%>
+
+<%-render("views/header.ejs", {PageTitle: pageTitle})%>
+<%-render("views/nav.ejs")%>
+
+<div class="content-div">
+	<form method="POST" action="/scenarios/delete_site_post">
+		<input type="hidden" name="site_id" value="<%=site._id%>"/>
+
+		<p>
+			Do you want to remove site <%=site.name%>?
+		</p>
+
+		<button name="submit">Accept</button> 
+		<a href="/scenarios/<%=site._id%>">Back</a>
+	</form>
+</div>
+
+<%-render("views/footer.ejs")%>

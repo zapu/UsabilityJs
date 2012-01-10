@@ -121,6 +121,24 @@ module.exports =
 		});
 	},
 
+	removeScenario: function(id, callback)
+	{
+		this.getScenarioById(id, function(scenario){
+			if(scenario == null) {
+				callback({ok: false});
+				return;
+			}
+
+			couch.db.remove(scenario._id, scenario._rev, function(err, res){
+				if(err) {
+					throw err;
+				}
+				
+				callback(res);
+			});
+		});
+	},
+
 	updateSite: function(id, site, callback)
 	{
 		this.getSiteById(id, function(current_site){
@@ -146,7 +164,27 @@ module.exports =
 				throw err;
 			}
 
+			console.log(res);
+
 			callback(res);
+		});
+	},
+
+	removeSite: function(id, callback)
+	{
+		this.getSiteById(id, function(site){
+			if(site == null) {
+				callback({ok: false});
+				return;
+			}
+
+			couch.db.remove(site._id, site._rev, function(err, res){
+				if(err) {
+					throw err;
+				}
+
+				callback(res);
+			});
 		});
 	}
 }

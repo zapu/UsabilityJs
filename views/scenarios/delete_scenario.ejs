@@ -1,0 +1,21 @@
+<%
+	var pageTitle = "Delete scenario " + scenario.name;
+%>
+
+<%-render("views/header.ejs", {PageTitle: pageTitle})%>
+<%-render("views/nav.ejs")%>
+
+<div class="content-div">
+	<form method="POST" action="/scenarios/delete_scenario_post">
+		<input type="hidden" name="scenario_id" value="<%=scenario._id%>"/>
+
+		<p>
+			Do you want to remove scenario <%=scenario.name%>?
+		</p>
+
+		<button name="submit">Accept</button> 
+		<a href="/scenarios/show/<%=scenario._id%>">Back</a>
+	</form>
+</div>
+
+<%-render("views/footer.ejs")%>
