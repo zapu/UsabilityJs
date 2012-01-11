@@ -18,7 +18,9 @@ PageAction.prototype.serialize = function()
 {
 	var obj = {};
 	for(var key in this) {
-		obj[key] = this[key];
+		if(typeof this[key] != 'function') {
+			obj[key] = this[key];
+		}
 	}
 	obj._name = this.getName();
 

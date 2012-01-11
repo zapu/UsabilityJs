@@ -207,19 +207,24 @@ TestReport.prototype.serialize = function()
 {
 	var obj = {
 		uuid: this.uuid,
-		scenario_id: this.scenario.id,
+		scenario_id: -1,
 		start_time: this.reportStartTime,
 		end_time: this.reportEndTime,
 		pages: [],
 		requests: [],
 	};
 
-	this.pages.forEach(function(page){
-		obj.pages.push(page.serialize());
+	if(this.scenario != null) {
+		obj.scenario_id = this.scenario.id;
+	}
+
+	this.requests.forEach(function(request){
+		//set serializedId so we can serialize TestPages later
+		obj.requests.push(request.serialize());
 	});
 
-	this.request.forEach(function(request){
-		obj.requests.push(request.serialize());
+	this.pages.forEach(function(page){
+		obj.pages.push(page.serialize());
 	});
 
 	return obj;

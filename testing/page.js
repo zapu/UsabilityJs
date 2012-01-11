@@ -13,12 +13,31 @@ function TestPage(id, action)
 TestPage.prototype.addPageAction = function(action)
 {
 	this.actions.push(action);
-	action.pageId = this.pageId;
+	action.pageId = this.id;
 }
 
 TestPage.prototype.serialize = function()
 {
-	
+	var obj = {
+		id: this.id,
+		request_id: -1,
+		page_loaded_action_id: -1, 
+		actions: [],
+	};
+
+	this.actions.forEach(function(action){
+		if(this.pageLoadedAction == action) {
+			obj.page_loaded_action_id = obj.actions.length;
+		}
+
+		obj.actions.push(action);
+	});
+
+	if(this.request != null) {
+		obj.request_id = this.request.id;
+	}
+
+	return obj;
 }
 
 module.exports = {

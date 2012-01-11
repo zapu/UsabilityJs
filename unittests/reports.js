@@ -9,7 +9,7 @@ module.exports = testCase({
 	setUp: function(callback)
 	{
 		this.testManager = new manager.TestManager();
-		this.report = this.testManager.beginNewTest(null);
+		this.report = this.testManager.beginNewTest({tasks:[]});
 
 		callback();
 	},

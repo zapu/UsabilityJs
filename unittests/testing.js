@@ -17,14 +17,14 @@ module.exports = testCase({
 
 	addTest1: function(test)
 	{	
-		var report = this.testManager._createTestReport(null);
+		var report = this.testManager._createTestReport({tasks:[]});
 		test.ok(this.testManager.getReportByUUID(report.uuid) == report, "Report added by uuid");
 		test.done();
 	},
 
 	beginTest1: function(test)
 	{
-		var report = this.testManager.beginNewTest(null);
+		var report = this.testManager.beginNewTest({tasks:[]});
 		test.ok(this.testManager.getReportByUUID(report.uuid) == report, "Report added by uuid");
 		test.done();
 	},
