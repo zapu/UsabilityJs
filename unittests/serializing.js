@@ -31,7 +31,16 @@ module.exports = testCase({
 		var page2 = report.addAction(clickAction);
 
 		var obj = report.serialize();
-		console.dir(obj, 7);
+		//console.log(JSON.stringify(obj));
 		test.done();
+	},
+
+	actionName: function(test)
+	{
+		var pageLoadedAction = actions.CreateAction({action: "PageLoadedAction", requestId: 1});
+		var obj = pageLoadedAction.serialize();
+		
+		test.ok(obj.action == "PageLoaded", "action name serialized correctly");
+		test.done();	
 	},
 });

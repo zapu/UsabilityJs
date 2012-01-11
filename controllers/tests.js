@@ -112,7 +112,9 @@ function endTestPost(request, response, params)
 		test.active = false;
 		test.success = (fields["action"] == "success");
 
-		response.end(JSON.stringify(test));
+		testManager.saveAndRemoveTest(test, function(res){
+			response.end(JSON.stringify(res));
+		});
 	});
 }
 

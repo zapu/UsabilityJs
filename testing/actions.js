@@ -22,7 +22,7 @@ PageAction.prototype.serialize = function()
 			obj[key] = this[key];
 		}
 	}
-	obj._name = this.getName();
+	obj.action = this.getName();
 
 	return obj;
 }

@@ -26,4 +26,12 @@ couch.db.save('_design/test', {
 			} 
 		}
 	},
+
+	reports: {
+		map: function(doc) {
+			if(doc.type == "report") {
+				emit(doc._id, doc);
+			}
+		}
+	}
 });

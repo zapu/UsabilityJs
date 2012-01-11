@@ -3,6 +3,8 @@ var TestPage = require("./report").TestPage;
 
 var mathuuid = require("../mathuuid");
 
+var testReportsModel = require("../models/testreports");
+
 function TestManager()
 {
 	this.testMap = {};
@@ -55,6 +57,15 @@ TestManager.prototype.bindToSocketIO = function(socket)
 		}
 		
 		test.bindToSocketIO(socket);
+	});
+}
+
+TestManager.prototype.saveAndRemoveTest = function(test, callback)
+{
+	var that = this;
+	testReportsModel.addTestReport(test, function(res){
+		delete that.testMap[test.uuid];
+		callback({ok: true});
 	});
 }
 

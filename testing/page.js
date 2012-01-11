@@ -30,7 +30,7 @@ TestPage.prototype.serialize = function()
 			obj.page_loaded_action_id = obj.actions.length;
 		}
 
-		obj.actions.push(action);
+		obj.actions.push(action.serialize());
 	});
 
 	if(this.request != null) {

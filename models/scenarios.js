@@ -164,8 +164,6 @@ module.exports =
 				throw err;
 			}
 
-			console.log(res);
-
 			callback(res);
 		});
 	},
