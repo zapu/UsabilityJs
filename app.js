@@ -1,3 +1,5 @@
+require.paths.push('/usr/local/lib/node_modules');
+
 var http = require("http");
 var url = require("url");
 var fs = require("fs");
@@ -5,9 +7,6 @@ var path = require("path");
 
 var router = require("./router");
 var templates = require("./templates");
-
-//Requiring mysqlcli will also set up the connection
-var mysqlcli = require("./mysqlcli");
 
 var proxyModule = require("./proxy");
 var testManagerModule = require("./testing/manager");
