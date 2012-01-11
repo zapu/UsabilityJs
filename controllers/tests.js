@@ -111,6 +111,8 @@ function endTestPost(request, response, params)
 
 		test.active = false;
 		test.success = (fields["action"] == "success");
+
+		response.end(JSON.stringify(test));
 	});
 }
 

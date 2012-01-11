@@ -203,6 +203,28 @@ TestReport.prototype.getRelativeFormattedTime = function(time)
 	return result;
 }
 
+TestReport.prototype.serialize = function()
+{
+	var obj = {
+		uuid: this.uuid,
+		scenario_id: this.scenario.id,
+		start_time: this.reportStartTime,
+		end_time: this.reportEndTime,
+		pages: [],
+		requests: [],
+	};
+
+	this.pages.forEach(function(page){
+		obj.pages.push(page.serialize());
+	});
+
+	this.request.forEach(function(request){
+		obj.requests.push(request.serialize());
+	});
+
+	return obj;
+}
+
 module.exports = {
 	TestReport: TestReport,
 }

@@ -16,6 +16,11 @@ TestPage.prototype.addPageAction = function(action)
 	action.pageId = this.pageId;
 }
 
+TestPage.prototype.serialize = function()
+{
+	
+}
+
 module.exports = {
 	TestPage: TestPage,
 }

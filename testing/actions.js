@@ -14,6 +14,17 @@ PageAction.prototype.loadFromPayload = function(payload)
 	}
 }
 
+PageAction.prototype.serialize = function()
+{
+	var obj = {};
+	for(var key in this) {
+		obj[key] = this[key];
+	}
+	obj._name = this.getName();
+
+	return obj;
+}
+
 function PageLoadedAction()
 {
 	PageLoadedAction.super_.call(this);	
@@ -164,7 +175,7 @@ function CreateAction(payload)
 	return action;
 }
 
-//export ALL the classes!
+//export ALL the classes
 module.exports = {
 	actions: {
 		PageAction: PageAction,
