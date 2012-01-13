@@ -15,7 +15,7 @@ function TestReport(uuid)
 	this.pages = [];
 	this.requests = [];
 
-	this.active = true;
+	this.active = false;
 
 	this.currentTask = 0;
 	this.lastTaskChangeTime = 0;
@@ -252,6 +252,12 @@ TestReport.prototype.unserialize = function(obj)
 		testpage.request = that.requests[page_object.request_id];
 		that.pages[testpage.id] = testpage;
 	});
+}
+
+TestReport.prototype.onTestEnd = function()
+{
+	this.taskInfos[this.currentTask].time += new Date() - this.lastTaskChangeTime;
+	this.active = false;
 }
 
 module.exports = {

@@ -13,6 +13,7 @@ function TestManager()
 TestManager.prototype.beginNewTest = function(scenario)
 {
 	var test = this._createTestReport(scenario);
+	test.active = true;
 	
 	return test;	
 }
@@ -63,6 +64,8 @@ TestManager.prototype.bindToSocketIO = function(socket)
 TestManager.prototype.saveAndRemoveTest = function(test, callback)
 {
 	var that = this;
+	test.onTestEnd();
+
 	testReportsModel.addTestReport(test, function(res){
 		delete that.testMap[test.uuid];
 		callback({ok: true});
