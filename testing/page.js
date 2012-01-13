@@ -23,15 +23,12 @@ TestPage.prototype.serialize = function()
 	var obj = {
 		id: this.id,
 		request_id: -1,
-		page_loaded_action_id: -1, 
 		actions: [],
 	};
 
-	this.actions.forEach(function(action){
-		if(that.pageLoadedAction == action) {
-			obj.page_loaded_action_id = obj.actions.length;
-		}
+	obj.page_loaded_action = this.pageLoadedAction.serialize();
 
+	this.actions.forEach(function(action){
 		obj.actions.push(action.serialize());
 	});
 
@@ -51,7 +48,7 @@ TestPage.prototype.unserialize = function(obj)
 		that.actions.push(action);
 	});
 
-	this.pageLoadedAction = this.actions[obj.page_loaded_action_id];
+	this.pageLoadedAction = actions.UnserializeAction(obj.page_loaded_action);
 }
 
 module.exports = {

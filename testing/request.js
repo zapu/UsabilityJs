@@ -15,6 +15,7 @@ TestRequest.prototype.serialize = function()
 
 TestRequest.prototype.unserialize = function(obj)
 {
+	this.id = obj.id;
 	this.path = obj.path;
 }
 

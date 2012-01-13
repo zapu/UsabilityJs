@@ -86,6 +86,7 @@ function listTests(request, response, params)
 			}
 
 			var realReport = testManager.unserializeReport(report);
+			realReport.scenario = scenario;
 			console.log(realReport);
 			reportObjects.push(realReport);
 		});
@@ -104,7 +105,7 @@ function listTests(request, response, params)
 	});
 }
 
-function showTest(request, response, params)
+function showActiveTest(request, response, params)
 {
 	response.writeHead(200);
 	
@@ -167,13 +168,42 @@ function endTestPost(request, response, params)
 	});
 }
 
+function showTestReport(request, response, params)
+{
+	testReportsModel.getReportById(params["id"], function(doc){
+		if(doc == null) {
+			response.writeHead(404);
+			response.end("no such test report");
+			return;
+		}
+
+		scenariosModel.getScenarioById(doc.scenario_id, function(scenario) {		
+		scenariosModel.getSiteById(scenario.site_id, function(site) {	
+			scenario.site = site;
+			var testReport = testManager.unserializeReport(doc);
+			testReport.scenario = scenario;
+
+			response.writeHead(200);
+			var viewParams = {
+				test: testReport,
+			};
+
+			var text = templates.render("views/tests/show_test.ejs", viewParams);
+			response.end(text);
+		});
+		});
+	});
+}
+
 module.exports.install = function(_testManager)
 {
 	testManager = _testManager;
 
 	router.addRoute("/tests/begintest/:id", beginTest);
 	router.addRoute("/tests/begin_new_test", beginNewTestPost);
-	router.addRoute("/tests/show_test/:uuid", showTest);
+	router.addRoute("/tests/show_test/:uuid", showActiveTest);
+
+	router.addRoute("/tests/show_report/:id", showTestReport);
 
 	router.addRoute("/tests/end_test/:uuid", endTest);
 	router.addRoute("/tests/end_test_post", endTestPost);
