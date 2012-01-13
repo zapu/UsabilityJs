@@ -212,10 +212,11 @@ TestReport.prototype.serialize = function()
 		end_time: this.reportEndTime,
 		pages: [],
 		requests: [],
+		task_infos: this.taskInfos,
 	};
 
 	if(this.scenario != null) {
-		obj.scenario_id = this.scenario.id;
+		obj.scenario_id = this.scenario._id;
 	}
 
 	this.requests.forEach(function(request){
@@ -228,6 +229,29 @@ TestReport.prototype.serialize = function()
 	});
 
 	return obj;
+}
+
+TestReport.prototype.unserialize = function(obj)
+{
+	this.reportStartTime = obj.start_time;
+	this.reportEndTime = obj.end_time;
+
+	this.taskInfos = obj.task_infos;
+
+	var that = this;
+
+	obj.requests.forEach(function(request_object){
+		var req = new request.TestRequest();
+		req.unserialize(request_object);
+		that.requests[req.id] = req;
+	});
+
+	obj.pages.forEach(function(page_object){
+		var testpage = new page.TestPage(page_object.id, {});
+		testpage.unserialize(page_object);
+		testpage.request = that.requests[page_object.request_id];
+		that.pages[testpage.id] = testpage;
+	});
 }
 
 module.exports = {

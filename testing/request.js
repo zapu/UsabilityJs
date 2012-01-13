@@ -13,6 +13,11 @@ TestRequest.prototype.serialize = function()
 	};
 }
 
+TestRequest.prototype.unserialize = function(obj)
+{
+	this.path = obj.path;
+}
+
 module.exports = {
 	TestRequest: TestRequest,
 }

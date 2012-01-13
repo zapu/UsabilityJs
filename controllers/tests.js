@@ -3,6 +3,7 @@ var formidable = require("formidable");
 var router = require("../router");
 var templates = require("../templates");
 var scenariosModel = require("../models/scenarios");
+var testReportsModel = require("../models/testreports");
 
 var testManager = null;
 
@@ -50,9 +51,57 @@ function listTests(request, response, params)
 		var test = testManager.testMap[uid];
 		activeTests.push(test);
 	}
-	
-	response.writeHead(200);
-	response.end(templates.render("views/tests/testlist.ejs", {activeTests: activeTests}));
+
+	testReportsModel.getAllReports(function(reports){
+	scenariosModel.getSites(function(sites){
+	scenariosModel.getAllScenarios(function(scenarios){
+		var siteMap = {};
+		var scenarioMap = {};
+
+		var reportObjects = [];
+
+		sites.forEach(function(site){
+			siteMap[site._id] = site;
+
+			site.scenarios = [];
+			site.reports = [];
+		});
+
+		scenarios.forEach(function(scenario){
+			scenarioMap[scenario._id] = scenario;
+
+			var site = siteMap[scenario.site_id];
+			scenario.site = site;
+			scenario.reports = [];
+			site.scenarios.push(scenario);
+		});
+
+		reports.forEach(function(report){
+			var scenario = scenarioMap[report.scenario_id];
+
+			if(scenario != null) {
+				report.scenario = scenario;
+				scenario.reports.push(report);
+				scenario.site.reports.push(report);
+			}
+
+			var realReport = testManager.unserializeReport(report);
+			console.log(realReport);
+			reportObjects.push(realReport);
+		});
+
+		var viewParams = {
+			sites: sites,
+			scenarios: scenarios,
+			reports: reports,
+			activeTests: activeTests,
+		};
+
+		response.writeHead(200);
+		response.end(templates.render("views/tests/testlist.ejs", viewParams));
+	});
+	});
+	});
 }
 
 function showTest(request, response, params)

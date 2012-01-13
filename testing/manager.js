@@ -69,6 +69,13 @@ TestManager.prototype.saveAndRemoveTest = function(test, callback)
 	});
 }
 
+TestManager.prototype.unserializeReport = function(obj)
+{
+	var report = new TestReport(0);
+	report.unserialize(obj);
+	return report;
+}
+
 module.exports = {
 	TestManager: TestManager,
 }

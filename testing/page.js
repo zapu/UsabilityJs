@@ -18,6 +18,8 @@ TestPage.prototype.addPageAction = function(action)
 
 TestPage.prototype.serialize = function()
 {
+	var that = this;
+
 	var obj = {
 		id: this.id,
 		request_id: -1,
@@ -26,7 +28,7 @@ TestPage.prototype.serialize = function()
 	};
 
 	this.actions.forEach(function(action){
-		if(this.pageLoadedAction == action) {
+		if(that.pageLoadedAction == action) {
 			obj.page_loaded_action_id = obj.actions.length;
 		}
 
@@ -38,6 +40,18 @@ TestPage.prototype.serialize = function()
 	}
 
 	return obj;
+}
+
+TestPage.prototype.unserialize = function(obj)
+{
+	var that = this;
+
+	obj.actions.forEach(function(action_object) {
+		var action = actions.UnserializeAction(action_object);
+		that.actions.push(action);
+	});
+
+	this.pageLoadedAction = this.actions[obj.page_loaded_action_id];
 }
 
 module.exports = {

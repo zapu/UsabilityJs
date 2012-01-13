@@ -177,6 +177,23 @@ function CreateAction(payload)
 	return action;
 }
 
+function UnserializeAction(obj)
+{
+	var actionType = module.exports.actions[obj.action];
+	if(actionType == undefined) {
+		return null;
+	}
+
+	var action = new actionType();
+	for(var key in obj) {
+		if(key != "action") {
+			action[key] = obj[key];
+		}
+	}
+
+	return action;
+}
+
 //export ALL the classes
 module.exports = {
 	actions: {
@@ -192,4 +209,5 @@ module.exports = {
 	},
 
 	CreateAction: CreateAction,
+	UnserializeAction: UnserializeAction,
 }
