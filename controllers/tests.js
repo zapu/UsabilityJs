@@ -158,9 +158,10 @@ function endTestPost(request, response, params)
 			return;
 		}
 
-		test.active = false;
 		var success = (fields["action"] == "success");
+		var feedback = fields["feedback"];
 
+		test.feedback = feedback;
 		testManager.saveAndRemoveTest(test, success, function(res){
 			response.end(JSON.stringify(res));
 		});

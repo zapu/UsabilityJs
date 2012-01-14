@@ -25,6 +25,7 @@ function TestReport(uuid)
 	this.reportEndTime = 0;
 
 	this.result = null;
+	this.feedback = "";
 }
 
 TestReport.prototype.setCurrentTask = function(task)
@@ -241,6 +242,7 @@ TestReport.prototype.serialize = function()
 		task_infos: this.taskInfos,
 		result: this.result,
 		current_task: this.currentTask,
+		feedback: this.feedback,
 	};
 
 	if(this.scenario != null) {
@@ -268,6 +270,7 @@ TestReport.prototype.unserialize = function(obj)
 
 	this.result = obj.result;
 	this.currentTask = obj.current_task;
+	this.feedback = obj.feedback;
 
 	var that = this;
 

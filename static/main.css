@@ -127,11 +127,11 @@ body
 
 p.description
 {
-	font-family: "Lucida Console", "Courier New";
+	font-family: Georgia, Times, serif;
 	color: brown;
 	margin-left: 10px;
 	padding-left: 3px;
-	border-left: 1px solid brown;
+	font-size: 120%;
 }
 
 ul#tasklist
@@ -179,15 +179,15 @@ div.elementDesc span {
 }
 
 div.elementDesc span.elementTagName {
-	background-color: #5F99CF;
+	background-color: #2C1957;
 }
 
 div.elementDesc span.elementId {
-	background-color: #3F99CF;
+	background-color: #6C1C3E;
 }
 
 div.elementDesc span.elementPath {
-	background-color: #7F56CF;
+	background-color: #4F741E;
 	font-size: 80%;
 }
 
@@ -217,6 +217,14 @@ tr.taskCurrentRow {
 	font-weight: bold;
 }
 
+tr.taskChangedRow {
+	background-color: #E8F3FF;
+}
+
+tr.webpageLoadedRow {
+	background-color: #FFDEA3;
+}
+
 span.successResult {
 	color: #00C41A;
 }
@@ -231,4 +239,9 @@ span.failedResult {
 
 p.testResultType {
 	font-size: 130%;
+}
+
+p.tableTask {
+	font-family: Georgia, Times, serif;
+	font-size: 70%;
 }

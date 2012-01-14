@@ -4,19 +4,28 @@
 	<h2>Test report for scenario: <b><%= test.scenario.name %></b></h2>
 	<p>Total time: <%=test.getTotalReportTime()%></p>
 	<% if(!test.active) { %>
+		<h2>Test result:</h2>
+
 		<p class="testResultType">
 		<% if(test.result == "success") { %>
-			Test result: <span class="successResult">success</span>
+			<span class="successResult">success</span>
 		<% } else if(test.result == "partial_success1") { %>
-			Test result: <span class="partialSuccessResult">partial (probably) success</span><br/>
+			<span class="partialSuccessResult">partial (probably) success</span><br/>
 			Tester marked test as solved successfully but didn't finish it on last task - although last task was selected and then switched back to previous.
 		<% } else if(test.result == "partial_success2") { %>
-			Test result: <span class="partialSuccessResult">partial (probably) success</span><br/>
+			<span class="partialSuccessResult">partial (probably) success</span><br/>
 			Tester marked test as solved successfully but didn't finish it on last task.
 		<% } else if(test.result == "failed") { %>
 			Test result: <span class="failResult">failure</span>
 		<% } %>
 		</p>
+
+		<% if(test.feedback != "") { %>
+			<h2>Tester feedback:</h2>
+			<p class="description">
+				<%=test.feedback%>
+			</p>
+		<% } %>
 	<% } %>
 	</div>
 
@@ -77,19 +86,26 @@
 	<div class="content-div">
 	<h2>Test progress</h2>
 	<table>
+		<tr class="taskChangedRow">
+			<td colspan="2">
+				Test starts: task 1.
+				<p class="tableTask"><%=test.scenario.tasks[0]%></p>
+			</td>
+		</tr>
 		<% foreachEverything(test, function(page, action, tasknum) { %>
 			<% 
 			if(lastTaskNum != tasknum) { 
 				lastTaskNum = tasknum;
 			%>
-				<tr>
+				<tr class="taskChangedRow">
 					<td colspan="2">
 						Task changed to: <%=(tasknum+1)%>.
+						<p class="tableTask"><%=test.scenario.tasks[tasknum]%></p>
 					</td>
 				</tr>				
 			<% } %>
 			<% if(action == null) { %>
-				<tr>
+				<tr class="webpageLoadedRow">
 					<td>
 						<%=page.pageLoadedAction.deltatime.hours%>:<%=page.pageLoadedAction.deltatime.minutes%>:<%=page.pageLoadedAction.deltatime.seconds%>
 					</td>
