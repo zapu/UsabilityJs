@@ -1,32 +1,12 @@
-<%-render("views/header.ejs", {PageTitle: "View test report"})%>
-<%-render("views/nav.ejs")%>
-
-	<script src="/static/socketio/socket.io.js"></script>
-	<script src="/static/jquery-1.6.4.js"></script>
-	<script>
-	/*
-		var test_id = "<%= test.uuid %>";
-	
-		var socket = io.connect('http://192.168.248.128:8080');
-		socket.on('connect', function(){
-			socket.emit('test_subscribe', {uuid: test_id});
-		});
-		
-		socket.on('new_test_page', function(msg){
-			$("#testlist").append("<li>" + msg.page.address + "</li>");
-		});
-		
-		socket.on('error', function(msg) {
-			alert(msg.msg);
-		});
-		*/
-	</script>
-	
+<%-render("views/header.ejs", {PageTitle: "Viewing test report"})%>
+<%-render("views/nav.ejs")%>	
 	<div class="content-div">
-	<p>
-	A test for scenario: <b><%= test.scenario.name %></b>
-	</p>
+	<h2>Test report for scenario: <b><%= test.scenario.name %></b></h2>
+	<p>Total time: <%=test.getTotalReportTime()%></p>
 
+	</div>
+
+	<div class="content-div">
 	<h2>Tasks</h2>
 	<table>
 		<tr>
@@ -36,9 +16,19 @@
 		</tr>
 		<%
 		for(var key in test.scenario.tasks) { 
+			var taskNum = parseInt(key);
 			var taskName = test.scenario.tasks[key];
+			var trstyle = "taskRow";
+			if(test.isTaskVisited(key)) {
+				trstyle += " taskVisitedRow";
+				if(test.active && test.currentTask < taskNum) {
+					trstyle += " taskBackRow";
+				}
+			} else {
+				trstyle += " taskNotVisited";
+			}
 		%>
-			<tr>
+			<tr class="<%=trstyle%>">
 				<td>
 					<%=(parseInt(key)+1)%> 
 				</td>
@@ -71,6 +61,8 @@
 		}
 	%>
 
+	</div>
+	<div class="content-div">
 	<h2>Test progress</h2>
 	<table>
 		<% foreachEverything(test, function(page, action, tasknum) { %>
@@ -123,6 +115,8 @@
 		<% }); %>
 	</table>
 
+	</div>
+	<div class="content-div">
 	<h2>requests</h2>
 	<ul id="testlist">
 		<% test.requests.forEach(function(request) { %>

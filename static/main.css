@@ -200,3 +200,15 @@ textarea {
 	width: 60%;
 	height: 250px;
 }
+
+.taskVisitedRow {
+	background-color: #C2FF7C;
+}
+
+.taskBackRow {
+	background-color: #FFFB87;
+}
+
+.taskNotVisited {
+	background-color: #FF8C7A;
+}

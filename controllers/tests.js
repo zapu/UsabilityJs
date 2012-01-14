@@ -100,7 +100,7 @@ function listTests(request, response, params)
 		response.writeHead(200);
 		response.end(templates.render("views/tests/testlist.ejs", viewParams));
 	});
-	});
+	}); //lol
 	});
 }
 

@@ -34,6 +34,7 @@ TestReport.prototype.setCurrentTask = function(task)
 	this.lastTaskChangeTime = new Date();
 
 	this.currentTask = task;
+	this.taskInfos[this.currentTask].visited = true;
 }
 
 TestReport.prototype.addRequest = function(request)
@@ -173,8 +174,11 @@ TestReport.prototype.setScenario = function(scenario)
 	scenario.tasks.forEach(function(task){
 		that.taskInfos.push({
 			time: 0,
+			visited: false,
 		});
 	});
+
+	this.taskInfos[0].visited = true; //first task
 }
 
 TestReport.prototype.getTaskTotalTime = function(tasknum)
@@ -186,9 +190,18 @@ TestReport.prototype.getTaskTotalTime = function(tasknum)
 	return this.taskInfos[tasknum].time;
 }
 
-TestReport.prototype.getRelativeFormattedTime = function(time)
+TestReport.prototype.isTaskVisited = function(tasknum)
 {
-	var t = time - this.reportStartTime;
+	return this.taskInfos[tasknum].visited;
+}
+
+TestReport.prototype.getTotalReportTime = function()
+{
+	return this.reportEndTime - this.reportStartTime;
+}
+
+TestReport.prototype.formatTimeDuration = function(t)
+{
 	var result = {
 		totalms: t,
 	};
@@ -201,6 +214,13 @@ TestReport.prototype.getRelativeFormattedTime = function(time)
 	result.milliseconds = t % 1000;
 
 	return result;
+}
+
+TestReport.prototype.getRelativeFormattedTime = function(time)
+{
+	var t = time - this.reportStartTime;
+
+	return this.formatTimeDuration(t);
 }
 
 TestReport.prototype.serialize = function()
@@ -233,8 +253,8 @@ TestReport.prototype.serialize = function()
 
 TestReport.prototype.unserialize = function(obj)
 {
-	this.reportStartTime = obj.start_time;
-	this.reportEndTime = obj.end_time;
+	this.reportStartTime = new Date(obj.start_time);
+	this.reportEndTime = new Date(obj.end_time);
 
 	this.taskInfos = obj.task_infos;
 
@@ -258,6 +278,7 @@ TestReport.prototype.onTestEnd = function()
 {
 	this.taskInfos[this.currentTask].time += new Date() - this.lastTaskChangeTime;
 	this.active = false;
+	this.reportEndTime = new Date();
 }
 
 module.exports = {
