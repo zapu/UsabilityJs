@@ -209,6 +209,10 @@ textarea {
 	background-color: #FFFB87;
 }
 
-.taskNotVisited {
+.taskNotVisitedRow {
 	background-color: #FF8C7A;
+}
+
+.taskCurrentRow {
+	font-weight: bold;
 }

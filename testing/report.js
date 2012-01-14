@@ -23,6 +23,8 @@ function TestReport(uuid)
 
 	this.reportStartTime = 0;
 	this.reportEndTime = 0;
+
+	this.result = null;
 }
 
 TestReport.prototype.setCurrentTask = function(task)
@@ -197,7 +199,11 @@ TestReport.prototype.isTaskVisited = function(tasknum)
 
 TestReport.prototype.getTotalReportTime = function()
 {
-	return this.reportEndTime - this.reportStartTime;
+	if(this.active) {
+		return new Date() - this.reportStartTime;
+	} else {
+		return this.reportEndTime - this.reportStartTime;
+	}
 }
 
 TestReport.prototype.formatTimeDuration = function(t)
@@ -233,6 +239,8 @@ TestReport.prototype.serialize = function()
 		pages: [],
 		requests: [],
 		task_infos: this.taskInfos,
+		result: this.result,
+		current_task: this.currentTask,
 	};
 
 	if(this.scenario != null) {
@@ -258,6 +266,9 @@ TestReport.prototype.unserialize = function(obj)
 
 	this.taskInfos = obj.task_infos;
 
+	this.result = obj.result;
+	this.currentTask = obj.current_task;
+
 	var that = this;
 
 	obj.requests.forEach(function(request_object){
@@ -274,11 +285,28 @@ TestReport.prototype.unserialize = function(obj)
 	});
 }
 
-TestReport.prototype.onTestEnd = function()
+TestReport.prototype.onTestEnd = function(success)
 {
 	this.taskInfos[this.currentTask].time += new Date() - this.lastTaskChangeTime;
 	this.active = false;
 	this.reportEndTime = new Date();
+
+	if(success) {
+		if(this.currentTask != this.scenario.tasks.length - 1) {
+			//User finished test but wasn't on last task
+			if(this.taskInfos[this.scenario.tasks.length - 1].visited) {
+				//But last task was visited
+				this.result = "partial_success1";
+			} else {
+				//Last task wasn't visited
+				this.result = "partial_success2";
+			}
+		} else {
+			this.result = "success";
+		}
+	} else {
+		this.result = "failed";
+	}
 }
 
 module.exports = {

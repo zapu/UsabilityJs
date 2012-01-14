@@ -61,10 +61,10 @@ TestManager.prototype.bindToSocketIO = function(socket)
 	});
 }
 
-TestManager.prototype.saveAndRemoveTest = function(test, callback)
+TestManager.prototype.saveAndRemoveTest = function(test, success, callback)
 {
 	var that = this;
-	test.onTestEnd();
+	test.onTestEnd(success);
 
 	testReportsModel.addTestReport(test, function(res){
 		delete that.testMap[test.uuid];
