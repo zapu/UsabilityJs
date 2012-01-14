@@ -87,7 +87,6 @@ function listTests(request, response, params)
 
 			var realReport = testManager.unserializeReport(report);
 			realReport.scenario = scenario;
-			console.log(realReport);
 			reportObjects.push(realReport);
 		});
 

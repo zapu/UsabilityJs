@@ -14,6 +14,29 @@
 </div>
 
 <div class="content-div">
+<h2>Test report archive:</h2>
+
+<ul>
+	<% sites.forEach(function(site){ %>
+		<% if(site.reports.length != 0) { %>
+			<li>Site <b><%=site.name%></b></li>
+				<ul>
+					<% site.scenarios.forEach(function(scenario) { %>
+						<% if(scenario.reports.length != 0) { %>
+							<li>Scenario: <b><%=scenario.name%></b>
+								<ul>
+									<% scenario.reports.forEach(function(report) { %>
+										<li><a href="/tests/show_report/<%=report._id%>"><%=report._id%></a></li>
+									<% }); %>
+								</ul>							
+							</li>		
+						<% } %>
+					<% }); %>
+				</ul>
+			</li>
+		<% } %>
+	<% }); %>
+</ul>
 
 </div>
 

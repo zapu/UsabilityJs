@@ -43,16 +43,16 @@
 					<%=(parseInt(key)+1)%> 
 				</td>
 				<td>
-					<% if(test.currentTask == key) { %>
+					<% if(test.active && test.currentTask == key) { %>
 						<b>
 					<% } %>
 						<%=taskName%>
-					<% if(test.currentTask == key) { %>
+					<% if(test.active && test.currentTask == key) { %>
 						</b>
 					<% } %>
 				</td>
 				<td>
-					<%=test.getTaskTotalTime(parseInt(key))/1000 | 0%>
+					<%=test.getTaskTotalTime(parseInt(key))/1000 | 0%> seconds
 				</td>
 			</tr>
 		<% } %>
