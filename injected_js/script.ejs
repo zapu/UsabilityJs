@@ -5,7 +5,34 @@
 	var ujsUrl = "<%-ujsUrl%>";
 
 	/* Function used to send javascript objects to host application */
-	function sendPayload(obj) {
+	function sendPayload(obj, callback) {
+		try {
+			var str = JSON.stringify(obj);
+
+			var req = new XMLHttpRequest();
+			req.open('POST', '/__ujs_callback', true);
+			req.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+			req.onreadystatechange = function (aEvt) {
+				if (req.readyState == 4) {
+					if(req.status == 200) {
+						if(callback != null) {
+							callback(JSON.parse(req.responseText));
+						}
+					} else {
+						throw new "Loading error";
+					}
+				}
+			};
+			req.send(str);
+		} catch (err) {
+			console.log("Error: " + err);
+		}
+
+		return null;
+	}
+
+	function sendPayloadSync(obj)
+	{
 		try {
 			var str = JSON.stringify(obj);
 
@@ -31,11 +58,10 @@
 		console = {log: function(a){}};
 	}
 
-	var pageLoaded = sendPayload({action: "PageLoadedAction", requestId: __ujs_request_id});
+	var pageLoaded = sendPayloadSync({action: "PageLoadedAction", requestId: __ujs_request_id});
 	__ujs_page_id = pageLoaded.pageId;
 
 	console.log("inject.js reporting in " + __ujs_request_id + " " + __ujs_page_id);
-
 
 	document.addEventListener( "DOMContentLoaded", function() {
 		addScenarioBar();
