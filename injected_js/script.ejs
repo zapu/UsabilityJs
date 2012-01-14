@@ -67,6 +67,13 @@
 		addScenarioBar();
 	}, false);
 
+	window.onbeforeunload = function (e) {
+		//Before unload - send stats
+		if(document.activeElement != null) {
+			checkForInputValueChanged(document.activeElement);
+		}
+	}
+
 	function updateCurrentTaskParagraphs()
 	{
 		var currentTaskNumP = document.getElementById("__ujs_currentTaskNum");
@@ -185,10 +192,15 @@
 		}
 	}, true);
 
+	function isElementForm(target)
+	{
+		return (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement);
+	}
+
 	document.addEventListener('focus', function(e) {
 		var target = e.target || e.originalTarget;
 
-		if(target instanceof HTMLInputElement) {
+		if(isElementForm(target)) {
 			var payload = {
 				action: "ElementFocusedAction",
 				pageId: __ujs_page_id,
@@ -199,10 +211,9 @@
 		}
 	}, true);
 
-	document.addEventListener('blur', function(e) {
-		var target = e.target || e.originalTarget;
-
-		if(target instanceof HTMLInputElement) {
+	function checkForInputValueChanged(target)
+	{
+		if(isElementForm(target)) {
 			if(target._sentValue == undefined || target.value != target._sentValue) {
 				var payload = {
 					action: "InputValueChangedAction",
@@ -215,8 +226,14 @@
 				target._sentValue = target.value;
 			}
 		}
+	}
 
-		if(target instanceof HTMLInputElement) {
+	document.addEventListener('blur', function(e) {
+		var target = e.target || e.originalTarget;
+
+		checkForInputValueChanged(target);
+
+		if(isElementForm(target)) {
 			var payload = {
 				action: "ElementBlurredAction",
 				pageId: __ujs_page_id,
