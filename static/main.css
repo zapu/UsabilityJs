@@ -201,18 +201,34 @@ textarea {
 	height: 250px;
 }
 
-.taskVisitedRow {
+tr.taskVisitedRow {
 	background-color: #C2FF7C;
 }
 
-.taskBackRow {
+tr.taskBackRow {
 	background-color: #FFFB87;
 }
 
-.taskNotVisitedRow {
+tr.taskNotVisitedRow {
 	background-color: #FF8C7A;
 }
 
-.taskCurrentRow {
+tr.taskCurrentRow {
 	font-weight: bold;
+}
+
+span.successResult {
+	color: #00C41A;
+}
+
+span.partialSuccessResult {
+	color: #C1B61B;
+}
+
+span.failedResult {
+	color: #FF1424;
+}
+
+p.testResultType {
+	font-size: 130%;
 }

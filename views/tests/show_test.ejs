@@ -4,7 +4,19 @@
 	<h2>Test report for scenario: <b><%= test.scenario.name %></b></h2>
 	<p>Total time: <%=test.getTotalReportTime()%></p>
 	<% if(!test.active) { %>
-		<p>Result: <%=test.result%></p>
+		<p class="testResultType">
+		<% if(test.result == "success") { %>
+			Test result: <span class="successResult">success</span>
+		<% } else if(test.result == "partial_success1") { %>
+			Test result: <span class="partialSuccessResult">partial (probably) success</span><br/>
+			Tester marked test as solved successfully but didn't finish it on last task - although last task was selected and then switched back to previous.
+		<% } else if(test.result == "partial_success2") { %>
+			Test result: <span class="partialSuccessResult">partial (probably) success</span><br/>
+			Tester marked test as solved successfully but didn't finish it on last task.
+		<% } else if(test.result == "failed") { %>
+			Test result: <span class="failResult">failure</span>
+		<% } %>
+		</p>
 	<% } %>
 	</div>
 
