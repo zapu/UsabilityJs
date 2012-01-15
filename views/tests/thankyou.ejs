@@ -1,0 +1,26 @@
+<%-render("views/header.ejs", {PageTitle: "Finish test"})%>
+<%-render("views/nav.ejs")%>
+
+<div class="content-div">
+	<h2>Thank you for your time, tester!</h2>
+
+	<form action="/tests/end_test_post" method="POST">
+		<p class="testquote">
+			&bdquo;Science. You did science.&rdquo;
+		</p>
+	</form>
+
+	<p>
+		Your test session has finished and test report was saved for future reference.
+	</p>
+
+	<p>
+		You can go back to <a href="/scenarios">scenarios page</a> and do more tests.
+	</p>
+
+	<p>
+		You can also view your <a href="/tests/show_report/<%=reportid%>">test report</a>.
+	</p>
+</div>
+
+<%-render("views/footer.ejs")%>

@@ -143,8 +143,6 @@ function endTestPost(request, response, params)
 {
 	var form = new formidable.IncomingForm();
 	form.parse(request, function(error, fields, files) {
-		response.writeHead(200);
-
 		console.log(fields);
 		
 		var testId = fields["uuid"];
@@ -160,7 +158,13 @@ function endTestPost(request, response, params)
 
 		test.feedback = feedback;
 		testManager.saveAndRemoveTest(test, success, function(res){
-			response.end(JSON.stringify(res));
+			var viewParams = {
+				reportid: res._id,
+			};
+			var text = templates.render("views/tests/thankyou.ejs", viewParams);
+
+			response.writeHead(200);
+			response.end(text);
 		});
 	});
 }

@@ -266,3 +266,9 @@ span.testListPartialSuccess {
 span.testListFail {
 	background-color: #B20000;
 }
+
+p.testquote {
+	font-family: Georgia, Times, serif;
+	font-size: 230%;
+	text-align: center;
+}

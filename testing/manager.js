@@ -68,7 +68,7 @@ TestManager.prototype.saveAndRemoveTest = function(test, success, callback)
 
 	testReportsModel.addTestReport(test, function(res){
 		delete that.testMap[test.uuid];
-		callback({ok: true});
+		callback(res);
 	});
 }
 
