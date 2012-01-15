@@ -26,7 +26,20 @@
 							<li>Scenario: <b><%=scenario.name%></b>
 								<ul>
 									<% scenario.reports.forEach(function(report) { %>
-										<li><a href="/tests/show_report/<%=report._id%>"><%=report._id%></a></li>
+										<li>
+											<a class="testReportLink" href="/tests/show_report/<%=report._id%>">
+												<%=new Date(report.end_time)%> 
+												<% var time = helpers.time.formatTimeDuration(new Date(report.end_time) - new Date(report.start_time)) %>
+												(<%=time.hours%>h <%=time.minutes%>m <%=time.seconds%>s)
+												<% if(report.result == "success") { %>
+													<span class="testListDesc testListSuccess">success</span>
+												<% } else if (report.result == "failure") { %>
+													<span class="testListDesc testListFail">failure</span>
+												<% } else /*partial success*/ { %> 
+													<span class="testListDesc testListPartialSuccess">success</span>
+												<% } %>
+											</a>
+										</li>
 									<% }); %>
 								</ul>							
 							</li>		

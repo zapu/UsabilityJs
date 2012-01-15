@@ -245,3 +245,24 @@ p.tableTask {
 	font-family: Georgia, Times, serif;
 	font-size: 70%;
 }
+
+.testReportLink {
+	text-decoration: none;
+}
+
+span.testListDesc {
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	background-color: #0C9100;
+	color: white;
+	padding: 0 2px 0 2px;
+	font-size: 70%;
+}
+
+span.testListPartialSuccess {
+	background-color: #877000;
+}
+
+span.testListFail {
+	background-color: #B20000;
+}

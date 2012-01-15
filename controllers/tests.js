@@ -58,7 +58,8 @@ function listTests(request, response, params)
 		var siteMap = {};
 		var scenarioMap = {};
 
-		var reportObjects = [];
+		//Note: we are not unserializing here, real objects are not needed
+		//in this view
 
 		sites.forEach(function(site){
 			siteMap[site._id] = site;
@@ -84,10 +85,6 @@ function listTests(request, response, params)
 				scenario.reports.push(report);
 				scenario.site.reports.push(report);
 			}
-
-			var realReport = testManager.unserializeReport(report);
-			realReport.scenario = scenario;
-			reportObjects.push(realReport);
 		});
 
 		var viewParams = {
