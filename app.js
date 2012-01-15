@@ -78,11 +78,3 @@ server.listen(8080);
 
 var proxy = new proxyModule.Proxy(testManager);
 proxy.startServer(8081);
-
-var socketio = require("socket.io").listen(server);
-
-socketio.sockets.on("connection", function(socket) {
-	testManager.bindToSocketIO(socket);
-});
-
-socketio.set('log level', 1);
