@@ -127,13 +127,15 @@ TestReport.prototype.onProxyRequestCompleted = function (request, requestOptions
 }
 
 //Handler for responses to proxified requests
-TestReport.prototype.proxyResponse = function(params)
+TestReport.prototype.proxyResponse = function(params, time, latency)
 {
 	console.log("Proxyfing: " + params.RequestOptions.path);
 	//Decide if inject <script src="__ujs_inject.js"
 	//Also decorate with __ujs_request_id var
 	var testRequest = new request.TestRequest();
 	testRequest.path = params.RequestOptions.path;
+	testRequest.time = time;
+	testRequest.latency = latency;
 	this.addRequest(testRequest);
 
 	if(params.ContentType.type == "text/html") {

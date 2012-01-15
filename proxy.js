@@ -139,6 +139,8 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 		}
 	}
 
+	var requestStartTime = new Date();
+
 	//No testReport to handle request or it doesn't want to:
 	//Proxyfing request to target server
 	proxyRequest = http.request(requestOptions, function(proxyResponse) {
@@ -191,7 +193,8 @@ Proxy.prototype.handleProxyRequest = function(request, response)
 					DecorBuffer: null,
 				}
 
-				testReport.proxyResponse(params);
+				var requestLatency = new Date() - requestStartTime;
+				testReport.proxyResponse(params, requestStartTime, requestLatency);
 				if(params.OutBuffer != null) {
 					decodedBuffer = params.OutBuffer;
 				}
