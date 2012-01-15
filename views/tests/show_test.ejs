@@ -2,7 +2,9 @@
 <%-render("views/nav.ejs")%>	
 	<div class="content-div">
 	<h2>Test report for scenario: <b><%= test.scenario.name %></b></h2>
-	<p>Total time: <%=test.getTotalReportTime()%></p>
+
+	<% var totalTimeDuration = helpers.time.formatTimeDuration(test.getTotalReportTime()); %>
+	<p>Total time: <%=totalTimeDuration.hours%>h <%=totalTimeDuration.minutes%>m <%=totalTimeDuration.seconds%>s</p>
 	<% if(!test.active) { %>
 		<h2>Test result:</h2>
 
@@ -63,7 +65,8 @@
 					<%=taskName%>
 				</td>
 				<td>
-					<%=test.getTaskTotalTime(parseInt(key))/1000 | 0%> seconds
+					<% var taskTimeDuration = helpers.time.formatTimeDuration(test.getTaskTotalTime(parseInt(key))); %>
+					<%=taskTimeDuration.hours%>h <%=taskTimeDuration.minutes%>m <%=taskTimeDuration.seconds%>s
 				</td>
 			</tr>
 		<% } %>
@@ -88,7 +91,7 @@
 	<table>
 		<tr class="taskChangedRow">
 			<td colspan="2">
-				Test starts: task 1.
+				Test starts: task <b>1</b>.
 				<p class="tableTask"><%=test.scenario.tasks[0]%></p>
 			</td>
 		</tr>
@@ -99,7 +102,7 @@
 			%>
 				<tr class="taskChangedRow">
 					<td colspan="2">
-						Task changed to: <%=(tasknum+1)%>.
+						Task changed to: <b><%=(tasknum+1)%></b>.
 						<p class="tableTask"><%=test.scenario.tasks[tasknum]%></p>
 					</td>
 				</tr>				
@@ -107,7 +110,7 @@
 			<% if(action == null) { %>
 				<tr class="webpageLoadedRow">
 					<td>
-						<%=page.pageLoadedAction.deltatime.hours%>:<%=page.pageLoadedAction.deltatime.minutes%>:<%=page.pageLoadedAction.deltatime.seconds%>
+						<%=page.pageLoadedAction.deltatime.hours%>h <%=page.pageLoadedAction.deltatime.minutes%>m <%=page.pageLoadedAction.deltatime.seconds%>s
 					</td>
 					<td>
 						<b>Webpage loaded:</b> <%= page.request.path %>
@@ -116,7 +119,7 @@
 			<% } else { %>
 				<tr>
 					<td>
-						<%=action.deltatime.hours%>:<%=action.deltatime.minutes%>:<%=action.deltatime.seconds%>
+						<%=action.deltatime.hours%>h <%=action.deltatime.minutes%>m <%=action.deltatime.seconds%>s
 					</td>
 					<td>
 						<%= action.getName() %>

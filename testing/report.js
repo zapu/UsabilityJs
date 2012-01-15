@@ -3,6 +3,7 @@ var page = require("./page");
 var request = require("./request");
 var fs = require("fs");
 var config = require("../config");
+var helpers = require("../helpers");
 
 var templates = require("../templates");
 templates.addTemplate("injected_js/script.ejs");
@@ -207,27 +208,11 @@ TestReport.prototype.getTotalReportTime = function()
 	}
 }
 
-TestReport.prototype.formatTimeDuration = function(t)
-{
-	var result = {
-		totalms: t,
-	};
-
-	result.hours = t / 3600000 | 0;
-	t = t % 3600000;
-	result.minutes = t / 60000 | 0;
-	t = t % 60000;
-	result.seconds = t / 1000 | 0; 
-	result.milliseconds = t % 1000;
-
-	return result;
-}
-
 TestReport.prototype.getRelativeFormattedTime = function(time)
 {
 	var t = time - this.reportStartTime;
 
-	return this.formatTimeDuration(t);
+	return helpers.time.formatTimeDuration(t);
 }
 
 TestReport.prototype.serialize = function()

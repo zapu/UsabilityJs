@@ -1,5 +1,6 @@
 var fs = require("fs");
 var ejs = require("ejs");
+var helpers = require("./helpers");
 
 module.exports = new Templates();
 
@@ -10,6 +11,9 @@ function Templates()
 
 Templates.prototype.render = function(templateName, locals)
 {
+	if(locals.helpers == undefined) {
+		locals.helpers = helpers;
+	}
 	if(locals.render == undefined) {
 		var savedLocals = locals;
 		var that = this;
