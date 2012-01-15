@@ -19,11 +19,11 @@
 <ul>
 	<% sites.forEach(function(site){ %>
 		<% if(site.reports.length != 0) { %>
-			<li>Site <b><%=site.name%></b></li>
+			<li>Site <b><a href="/scenarios/<%=site._id%>"><%=site.name%></a></b></li>
 				<ul>
 					<% site.scenarios.forEach(function(scenario) { %>
 						<% if(scenario.reports.length != 0) { %>
-							<li>Scenario: <b><%=scenario.name%></b>
+							<li>Scenario: <b><a href="/scenarios/show/<%=scenario._id%>"><%=scenario.name%></a></b>
 								<ul>
 									<% scenario.reports.forEach(function(report) { %>
 										<li>
