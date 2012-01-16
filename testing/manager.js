@@ -46,21 +46,6 @@ TestManager.prototype.getReportByUUID = function(uuid)
 	return this.testMap[uuid];
 }
 
-TestManager.prototype.bindToSocketIO = function(socket)
-{	
-	var that = this;
-	
-	socket.on('test_subscribe', function(msg) {	
-		var test = that.testMap[msg.uuid];
-		if(test == null) {
-			socket.emit('error', {msg: 'wrong test uuid'});
-			return;
-		}
-		
-		test.bindToSocketIO(socket);
-	});
-}
-
 TestManager.prototype.saveAndRemoveTest = function(test, success, callback)
 {
 	var that = this;

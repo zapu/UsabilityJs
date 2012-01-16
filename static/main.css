@@ -272,3 +272,15 @@ p.testquote {
 	font-size: 230%;
 	text-align: center;
 }
+
+button.endTest {
+	font-size: 150%;
+}
+
+button.endTestSuccess {
+	color: green;
+}
+
+button.endTestFailure {
+	color: red;
+}
