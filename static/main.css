@@ -7,14 +7,15 @@ body
 
 .bodydiv
 {
-	width: 950px;
+	/* width: 950px; */
+	width: 90%;
 	margin: 0 auto;
 	padding: 0;
 }
 
 .logo
 {
-	width: 1000px;
+	/*width: 1000px;*/
 	margin: 0 auto;
 
 	font-size: 200%;
@@ -136,16 +137,16 @@ p.description
 
 ul#tasklist
 {
-	width: 50%;
+	width: 600px;
 }
 
 #tasklist li
 {
-	width: 50%;
-	height: 30px;
+	width: 600px;
+	/*height: 30px;*/
 	background-color: silver;
 	margin-top: 1px;
-	padding: 2px;
+	padding: 3px;
 	font-weight: bold;
 }
 

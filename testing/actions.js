@@ -179,7 +179,6 @@ function CreateAction(payload)
 
 function UnserializeAction(obj)
 {
-
 	var actionType = module.exports.actions[obj.action + "Action"];
 	if(actionType == undefined) {
 		return null;

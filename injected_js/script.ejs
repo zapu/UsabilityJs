@@ -121,14 +121,12 @@
 		if(currentTask == 0) {
 			previousAnchor.style.visibility = "hidden";
 			nextAnchor.style.visibility = "visible";
-			finishAnchor.innerHTML = "Finish test";
 		} else if(currentTask == __ujs_scenario.tasks.length-1) {
 			nextAnchor.style.visibility = "hidden";
-			finishAnchor.innerHTML = "Finish test";
+			previousAnchor.style.visibility = "visible";
 		} else {
 			previousAnchor.style.visibility = "visible";
 			nextAnchor.style.visibility = "visible";
-			finishAnchor.innerHTML = "Finish test";
 		}
 	}
 
