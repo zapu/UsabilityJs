@@ -1,4 +1,13 @@
-var couch = require("./couchprovider");
+var couch;
+
+//Create database if it doesnt exist
+try{
+	couch = require("./couchprovider");
+}catch(e) {
+	if(e == "couchdb database does not exist") {
+		couch.db.create();
+	}
+}
 
 couch.db.save('_design/test', {
 	scenarios: {
@@ -34,4 +43,11 @@ couch.db.save('_design/test', {
 			}
 		}
 	}
-});
+	}, 
+	function(err, res) {
+		if(err) {
+			console.log("error", err);
+		} else {
+			console.log("Views added.");
+		}
+	});

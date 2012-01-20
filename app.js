@@ -11,6 +11,8 @@ var templates = require("./templates");
 var proxyModule = require("./proxy");
 var testManagerModule = require("./testing/manager");
 
+var config = require("./config");
+
 var testManager = new testManagerModule.TestManager();
 
 //Require controllers and install them (sets up routes etc.)
@@ -74,7 +76,9 @@ function onRequest(request, response)
 }
 
 var server = http.createServer(onRequest);
-server.listen(8080);
+server.listen(config.app_port);
 
 var proxy = new proxyModule.Proxy(testManager);
-proxy.startServer(8081);
+proxy.startServer(config.proxy_port);
+
+console.log("UsabilityJS seems to be running...");

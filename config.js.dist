@@ -4,4 +4,7 @@ module.exports = {
 	couch_address: "http://192.168.248.131",
 	couch_port: 5984,
 	couch_db: "usabilityjs",
+
+	app_port: 8080,
+	proxy_port: 8081,
 }
