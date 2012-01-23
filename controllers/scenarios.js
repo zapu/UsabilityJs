@@ -267,7 +267,7 @@ function deleteSitePost(request, response, params)
 		var site_id = fields["site_id"];
 
 		scenariosModel.removeSite(site_id, function(res){
-			return listScenarios(request, response, {});
+			return listScenarios(request, response, []);
 		});
 	});
 }
