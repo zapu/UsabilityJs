@@ -14,8 +14,9 @@ var db = conn.database(config.couch_db);
 db.exists(function(err, exists) {
 	if(err) {
 		console.log('error', err);
+		throw err;
 	} else if(!exists) {
-		throw new Exception("couchdb database does not exist");
+		throw "couchdb database does not exist";
 	}
 });
 
