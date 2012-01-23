@@ -3,7 +3,6 @@
 var router = require("../router");
 var templates = require("../templates");
 var scenariosModel = require("../models/scenarios");
-var sitesModel = require("../models/sites");
 var formidable = require("formidable");
 
 function listScenarios(request, response, params)
